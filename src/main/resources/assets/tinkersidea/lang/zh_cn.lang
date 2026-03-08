@@ -1,0 +1,12 @@
+item.greatsword.name=大剑
+item.greatsword.desc=大范围横扫攻击，伤害较高，攻速较慢，需要两只手挥动，在面对一大群敌人时表现出色。快去抵御僵尸入侵吧！
+item.spellblade.name=施法匕首
+item.spellblade.desc=近战攻击可附加魔法伤害，同时右键还能施放法术。谁说法师怕近战？
+
+item.magic_focus.name=施法核心
+stat.magic_focus.name=施法核心
+
+attribute.name.ti.magicPotency=法术强度
+
+modifier.sweep_edge.name=横扫之刃
+modifier.sweep_edge.desc=§o横扫千军！§r\n提高横扫攻击的威力

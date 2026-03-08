@@ -1,0 +1,11 @@
+item.greatsword.name=Great Sword
+item.greatsword.desc=Wide-area sweeping attack with high damage, slow attack speed, requires two-handed swinging, and performs excellently against large groups of enemies. Let's defend against the zombie invasion!
+item.spellblade.name=施法匕首
+item.spellblade.desc=近战攻击可附加魔法伤害，同时右键还能施放法术。
+
+item.magic_focus.name=施法核心
+stat.magic_focus.name=施法核心
+attribute.name.ti.magicPotency=法术强度
+
+modifier.sweep_edge.name=横扫之刃
+modifier.sweep_edge.desc=§o横扫千军！§r\n提高横扫攻击的威力

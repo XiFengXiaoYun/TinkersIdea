@@ -1,0 +1,9 @@
+{
+  "textures": {
+    "layer0": "tinkersidea:item/spellblade/handle",
+    "layer1": "tinkersidea:item/spellblade/blade",
+    "layer2": "tinkersidea:item/spellblade/guard",
+    "layer3": "tinkersidea:item/spellblade/focus",
+    "broken1": "tinkersidea:item/spellblade/broken"
+  }
+}
