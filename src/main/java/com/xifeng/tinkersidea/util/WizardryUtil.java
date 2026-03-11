@@ -12,10 +12,12 @@ import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.RayTracer;
 import electroblob.wizardry.util.SpellModifiers;
+import electroblob.wizardry.util.WandHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import slimeknights.tconstruct.library.utils.TagUtil;
@@ -51,19 +53,19 @@ public class WizardryUtil {
 
         SpellModifiers modifiers = new SpellModifiers();
 
-        int level = SpellBladeHelper.getUpgradeLevel(stack, WizardryItems.range_upgrade);
+        int level = WandHelper.getUpgradeLevel(stack, WizardryItems.range_upgrade);
         if(level > 0)
             modifiers.set(WizardryItems.range_upgrade, 1.0f + level * Constants.RANGE_INCREASE_PER_LEVEL, true);
 
-        level = SpellBladeHelper.getUpgradeLevel(stack, WizardryItems.duration_upgrade);
+        level = WandHelper.getUpgradeLevel(stack, WizardryItems.duration_upgrade);
         if(level > 0)
             modifiers.set(WizardryItems.duration_upgrade, 1.0f + level * Constants.DURATION_INCREASE_PER_LEVEL, false);
 
-        level = SpellBladeHelper.getUpgradeLevel(stack, WizardryItems.blast_upgrade);
+        level = WandHelper.getUpgradeLevel(stack, WizardryItems.blast_upgrade);
         if(level > 0)
             modifiers.set(WizardryItems.blast_upgrade, 1.0f + level * Constants.BLAST_RADIUS_INCREASE_PER_LEVEL, true);
 
-        level = SpellBladeHelper.getUpgradeLevel(stack, WizardryItems.cooldown_upgrade);
+        level = WandHelper.getUpgradeLevel(stack, WizardryItems.cooldown_upgrade);
         if(level > 0)
             modifiers.set(WizardryItems.cooldown_upgrade, 1.0f - level * Constants.COOLDOWN_REDUCTION_PER_LEVEL, true);
 
@@ -115,8 +117,9 @@ public class WizardryUtil {
     }
 
     public static int getMana(ItemStack stack) {
-        MagicNBT nbt = MagicNBT.from(stack);
-        return nbt.mana;
+        //MagicNBT nbt = MagicNBT.from(stack);
+        NBTTagCompound tag = SpellBladeHelper.getWizardryData(stack);
+        return tag.getInteger("mana");
     }
 
     public static int getMaxMana(ItemStack stack) {
@@ -130,15 +133,14 @@ public class WizardryUtil {
     }
 
     public static void addMana(ItemStack stack, int mana) {
-        MagicNBT nbt = new MagicNBT(TagUtil.getToolTag(stack));
-        nbt.mana += mana;
-        TagUtil.setToolTag(stack, nbt.get());
+        NBTTagCompound tag = SpellBladeHelper.getWizardryData(stack);
+        int oldMana = tag.getInteger("mana");
+        tag.setInteger("mana", oldMana + mana);
     }
 
     public static void setMana(ItemStack stack, int mana) {
-        MagicNBT nbt = new MagicNBT(TagUtil.getToolTag(stack));
-        nbt.mana = mana;
-        TagUtil.setToolTag(stack, nbt.get());
+        NBTTagCompound tag = SpellBladeHelper.getWizardryData(stack);
+        tag.setInteger("mana", mana);
     }
 
     public static void setMaxMana(ItemStack stack, int maxMana) {

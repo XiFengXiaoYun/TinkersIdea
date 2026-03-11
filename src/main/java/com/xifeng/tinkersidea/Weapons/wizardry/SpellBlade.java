@@ -3,6 +3,7 @@ package com.xifeng.tinkersidea.Weapons.wizardry;
 import com.google.common.collect.Multimap;
 import com.xifeng.tinkersidea.Attribute;
 import com.xifeng.tinkersidea.Weapons.WeaponAll;
+import com.xifeng.tinkersidea.modifiers.modifier.ModifierMagic;
 import com.xifeng.tinkersidea.parts.MagicMaterialType;
 import com.xifeng.tinkersidea.util.WizardryUtil;
 import electroblob.wizardry.client.DrawingUtils;
@@ -21,6 +22,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
@@ -50,7 +52,6 @@ public class SpellBlade extends SwordCore implements IWorkbenchItem, ISpellCasti
     public SpellBlade() {
         super(PartMaterialType.handle(TinkerTools.toolRod),
                 PartMaterialType.head(TinkerTools.knifeBlade),
-                PartMaterialType.extra(TinkerTools.crossGuard),
                 MagicMaterialType.magicFocus(WeaponAll.magicFocus));
         this.addCategory(Category.WEAPON, SpecialCategory.Wizardry);
         setTranslationKey("spellblade").setRegistryName("spellblade");
@@ -64,12 +65,10 @@ public class SpellBlade extends SwordCore implements IWorkbenchItem, ISpellCasti
         }
         HandleMaterialStats handle = list.get(0).getStatsOrUnknown(MaterialTypes.HANDLE);
         HeadMaterialStats head = list.get(1).getStatsOrUnknown(MaterialTypes.HEAD);
-        ExtraMaterialStats binding = list.get(2).getStatsOrUnknown(MaterialTypes.EXTRA);
-        MagicMaterialStats magic = list.get(3).getStatsOrUnknown(MagicMaterialType.MAGICFOCUS);
+        MagicMaterialStats magic = list.get(2).getStatsOrUnknown(MagicMaterialType.MAGICFOCUS);
 
         MagicNBT data = new MagicNBT();
         data.head(head);
-        data.extra(binding);
         data.handle(handle);
         data.magic(magic);
 
@@ -88,17 +87,20 @@ public class SpellBlade extends SwordCore implements IWorkbenchItem, ISpellCasti
         return 1.8;
     }
 
+    //TODO: 播放对应元素的魔法粒子效果
     @Override
     public boolean dealDamage(ItemStack stack, EntityLivingBase player, Entity entity, float damage) {
         boolean hit =  super.dealDamage(stack, player, entity, damage);
         if(player instanceof EntityPlayer && entity instanceof EntityLivingBase) {
             MagicNBT nbt = MagicNBT.from(stack);
-            double baseDamage = nbt.attack;
+            double baseDamage = nbt.attack * 0.5 + 1;
             float potency = WizardryUtil.getSpellPotency(stack) / 100.0f;
             float bonusMagicDmg = (float) (baseDamage * potency);
             entity.hurtResistantTime = 0;
             ((EntityLivingBase) entity).lastDamage = 0;
-            entity.attackEntityFrom(DamageSource.MAGIC, bonusMagicDmg);
+            DamageSource source = DamageSource.causePlayerDamage((EntityPlayer) player);
+            source.setMagicDamage();
+            entity.attackEntityFrom(source, bonusMagicDmg);
         }
         return hit;
     }
@@ -107,14 +109,25 @@ public class SpellBlade extends SwordCore implements IWorkbenchItem, ISpellCasti
     @Override
     public Multimap<String, AttributeModifier> getAttributeModifiers(@Nonnull EntityEquipmentSlot slot, ItemStack stack) {
         Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
-        double amount = WizardryUtil.getSpellPotency(stack)/100.0;
+        //need to be changed
+        double amount = calcSpellPotency(stack);
 
         if (slot == EntityEquipmentSlot.MAINHAND && !ToolHelper.isBroken(stack)) {
-            multimap.put(Attribute.MAGIC.getName(), new AttributeModifier(uuid, "Magic_Potency", amount, 0));
+            multimap.put(Attribute.MAGIC.getName(), new AttributeModifier(uuid, "Magic_Potency", amount, 1));
         }
 
-        TinkerUtil.getTraitsOrdered(stack).forEach((trait) -> trait.getAttributeModifiers(slot, stack, multimap));
+        //TinkerUtil.getTraitsOrdered(stack).forEach((trait) -> trait.getAttributeModifiers(slot, stack, multimap));
         return multimap;
+    }
+
+    private static double calcSpellPotency(ItemStack stack) {
+        return WizardryUtil.getSpellPotency(stack)/100.0;
+    }
+
+    @Override
+    public void addMaterialTraits(NBTTagCompound root, List<Material> materials) {
+        ModifierMagic.INSTANCE.apply(root);
+        super.addMaterialTraits(root, materials);
     }
 
 //Magic part!

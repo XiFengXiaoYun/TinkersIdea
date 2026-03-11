@@ -9,15 +9,9 @@ import electroblob.wizardry.item.ItemCrystal;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.NBTExtras;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Set;
 
 public final class SpellBladeHelper {
 
@@ -25,28 +19,13 @@ public final class SpellBladeHelper {
     public static final String SELECTED_SPELL_KEY = "selectedSpell";
     public static final String COOLDOWN_ARRAY_KEY = "cooldown";
     public static final String MAX_COOLDOWN_ARRAY_KEY = "maxCooldown";
-    public static final String UPGRADES_KEY = "upgrades";
-    public static final String PROGRESSION_KEY = "progression";
     public static final String WIZARDRY_DATA = "WizardryData";
     public static final String TIER = "tier";
     public static final String ELEMENT = "element";
+    public static final String MANA = "mana";
 
     private static final String DefaultTier = Tier.NOVICE.name();
     private static final String DefaultElement = Element.MAGIC.name();
-
-    private static final HashMap<Item, String> upgradeMap = new HashMap<>();
-
-    public static void addUpgrade() {
-        upgradeMap.put(WizardryItems.condenser_upgrade, "condenser");
-        upgradeMap.put(WizardryItems.storage_upgrade, "storage");
-        upgradeMap.put(WizardryItems.siphon_upgrade, "siphon");
-        upgradeMap.put(WizardryItems.range_upgrade, "range");
-        upgradeMap.put(WizardryItems.duration_upgrade, "duration");
-        upgradeMap.put(WizardryItems.cooldown_upgrade, "cooldown");
-        upgradeMap.put(WizardryItems.blast_upgrade, "blast");
-        upgradeMap.put(WizardryItems.attunement_upgrade, "attunement");
-        upgradeMap.put(WizardryItems.melee_upgrade, "melee");
-    }
 
     public static NBTTagCompound getWizardryData(ItemStack stack) {
         NBTTagCompound wizardryTag = new NBTTagCompound();
@@ -54,6 +33,7 @@ public final class SpellBladeHelper {
             if(!stack.getTagCompound().hasKey(WIZARDRY_DATA)) {
                 wizardryTag.setString(ELEMENT, DefaultElement);
                 wizardryTag.setString(TIER, DefaultTier);
+                wizardryTag.setInteger(MANA, 0);
                 stack.getTagCompound().setTag(WIZARDRY_DATA, wizardryTag);
             }
             return stack.getTagCompound().getCompoundTag(WIZARDRY_DATA);
@@ -253,59 +233,6 @@ public final class SpellBladeHelper {
         int selectedSpell = getWizardryData(wand).getInteger(SELECTED_SPELL_KEY);
         if(selectedSpell < 0 || cooldowns.length <= selectedSpell) return 0;
         return cooldowns[selectedSpell];
-    }
-
-    //Progression
-    public static void setProgression(ItemStack wand, int progression){
-        getWizardryData(wand).setInteger(PROGRESSION_KEY, progression);
-    }
-
-    public static int getProgression(ItemStack wand){
-        NBTTagCompound nbt = getWizardryData(wand);
-        if(!nbt.hasKey(PROGRESSION_KEY)) {
-            nbt.setInteger(PROGRESSION_KEY, 0);
-            return 0;
-        }
-        return getWizardryData(wand).getInteger(PROGRESSION_KEY);
-    }
-
-    public static void addProgression(ItemStack wand, int progression){
-        setProgression(wand, getProgression(wand) + progression);
-    }
-
-    //Upgrade
-    public static int getUpgradeLevel(ItemStack wand, Item upgrade){
-        String key = upgradeMap.get(upgrade);
-        NBTTagCompound nbt = getWizardryData(wand);
-        if(nbt.hasKey(UPGRADES_KEY) && key != null){
-            return nbt.getCompoundTag(UPGRADES_KEY).getInteger(key);
-        }
-        return 0;
-    }
-
-    public static int getTotalUpgrades(ItemStack wand){
-        int totalUpgrades = 0;
-        for(Item item : upgradeMap.keySet()){
-            totalUpgrades += getUpgradeLevel(wand, item);
-        }
-        return totalUpgrades;
-    }
-
-    public static void applyUpgrade(ItemStack wand, Item upgrade){
-        NBTTagCompound nbt = getWizardryData(wand);
-        if(!nbt.hasKey(UPGRADES_KEY)) NBTExtras.storeTagSafely(nbt, UPGRADES_KEY, new NBTTagCompound());
-        NBTTagCompound upgrades = nbt.getCompoundTag(UPGRADES_KEY);
-        String key = upgradeMap.get(upgrade);
-        if(key != null) upgrades.setInteger(key, upgrades.getInteger(key) + 1);
-        NBTExtras.storeTagSafely(nbt, UPGRADES_KEY, upgrades);
-    }
-
-    public static boolean isWandUpgrade(Item upgrade){
-        return upgradeMap.containsKey(upgrade);
-    }
-
-    public static Set<Item> getSpecialUpgrades(){
-        return Collections.unmodifiableSet(SpellBladeHelper.upgradeMap.keySet());
     }
 
     public static boolean isManaFull(ItemStack stack) {

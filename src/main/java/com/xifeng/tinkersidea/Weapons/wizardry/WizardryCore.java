@@ -1,6 +1,7 @@
 package com.xifeng.tinkersidea.Weapons.wizardry;
 
 import com.xifeng.tinkersidea.config.ModConfig;
+import com.xifeng.tinkersidea.modifiers.modifier.ModifierMagic;
 import com.xifeng.tinkersidea.util.WizardryUtil;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Constants;
@@ -20,6 +21,7 @@ import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.SpellProperties;
+import electroblob.wizardry.util.WandHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -51,7 +53,6 @@ public class WizardryCore {
     public WizardryCore(ISpellCastingItem spellCastingItem, Element element, SwordCore core) {
         this.manaStoringItem = (IManaStoringItem) spellCastingItem;
         this.core=core;
-        //this.tier= tier;
         this.element=element;
     }
 
@@ -60,7 +61,6 @@ public class WizardryCore {
     }
 
     public void setTier(ItemStack stack, String tierId) {
-        //Tier tier = Tier.valueOf(tierId);
         SpellBladeHelper.setTier(stack, tierId);
     }
 
@@ -100,10 +100,6 @@ public class WizardryCore {
         return SpellBladeHelper.getCurrentMaxCooldown(stack);
     }
 
-    public void addMana(ItemStack stack, int mana){
-        WizardryUtil.addMana(stack, mana);
-    }
-
     public int getMana(ItemStack stack){
         return WizardryUtil.getMana(stack);
     }
@@ -120,7 +116,7 @@ public class WizardryCore {
         }
 
         if(!world.isRemote && !SpellBladeHelper.isManaFull(stack) && world.getTotalWorldTime() % Constants.CONDENSER_TICK_INTERVAL == 0){
-            int baseAmount = SpellBladeHelper.getUpgradeLevel(stack, WizardryItems.condenser_upgrade);
+            int baseAmount = WandHelper.getUpgradeLevel(stack, WizardryItems.condenser_upgrade);
             int amount = (int)(baseAmount * Wizardry.settings.condenserAmountMultiplier);
             SpellBladeHelper.rechargeMana(stack, amount);
         }
@@ -165,7 +161,7 @@ public class WizardryCore {
                     this.getMana(stack), this.getManaCapacity(stack)));
 
             text.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wand.progression", new Style().setColor(TextFormatting.GRAY),
-                    SpellBladeHelper.getProgression(stack), tier.level < Tier.MASTER.level ? tier.next().getProgression() : 0));
+                    WandHelper.getProgression(stack), tier.level < Tier.MASTER.level ? tier.next().getProgression() : 0));
         }
     }
 
@@ -286,11 +282,11 @@ public class WizardryCore {
             if(tier.level < Tier.MASTER.level && castingTick % WizardryUtil.CONTINUOUS_TRACKING_INTERVAL == 0){
 
                 int progression = (int)(spell.getCost() * modifiers.get(SpellModifiers.PROGRESSION));
-                SpellBladeHelper.addProgression(stack, progression);
+                WandHelper.addProgression(stack, progression);
 
                 if(!Wizardry.settings.legacyWandLevelling){
                     Tier nextTier = tier.next();
-                    int excess = SpellBladeHelper.getProgression(stack) - nextTier.getProgression();
+                    int excess = WandHelper.getProgression(stack) - nextTier.getProgression();
                     if(excess >= 0 && excess < progression){
                         caster.playSound(WizardrySounds.ITEM_WAND_LEVELUP, 1.25f, 1);
                         WizardryAdvancementTriggers.wand_levelup.triggerFor(caster);
@@ -349,7 +345,7 @@ public class WizardryCore {
     }
 
     public int getSpellSlotCount(ItemStack stack){
-        return WizardryUtil.BASE_SPELL_SLOTS + SpellBladeHelper.getUpgradeLevel(stack, WizardryItems.attunement_upgrade);
+        return WizardryUtil.BASE_SPELL_SLOTS + WandHelper.getUpgradeLevel(stack, WizardryItems.attunement_upgrade);
     }
 
     public ItemStack applyUpgrade(EntityPlayer player, ItemStack wand, ItemStack upgrade){
@@ -359,48 +355,44 @@ public class WizardryCore {
             Tier tier = Tier.values()[upgrade.getItemDamage()];
 
             if((player == null || player.isCreative() || Wizardry.settings.legacyWandLevelling
-                    || SpellBladeHelper.getProgression(wand) >= tier.getProgression())
+                    || WandHelper.getProgression(wand) >= tier.getProgression())
                     && tier == thisTier.next() && thisTier != Tier.MASTER){
 
                 if(Wizardry.settings.legacyWandLevelling){
-                    SpellBladeHelper.setProgression(wand, 0);
+                    WandHelper.setProgression(wand, 0);
                 }else{
-                    SpellBladeHelper.setProgression(wand, SpellBladeHelper.getProgression(wand) - tier.getProgression());
+                    WandHelper.setProgression(wand, WandHelper.getProgression(wand) - tier.getProgression());
                 }
 
                 if(player != null) WizardData.get(player).setTierReached(tier);
 
-                int oldMaxMana = WizardryUtil.getMaxMana(wand);
-                float oldPotency = WizardryUtil.getSpellPotency(wand);
-
                 this.setTier(wand, tier.name());
-                WizardryUtil.setMaxMana(wand, (int) (oldMaxMana * (tier.level * ModConfig.manaCapacityIncrease + 1.0)));
-                WizardryUtil.setPotency(wand, (float) (oldPotency * (tier.level) * ModConfig.spellPotencyIncrease + 1.0));
+                ModifierMagic.INSTANCE.apply(wand);
                 upgrade.shrink(1);
 
                 return wand;
             }
 
-        }else if(SpellBladeHelper.isWandUpgrade(upgrade.getItem())){
+        }else if(WandHelper.isWandUpgrade(upgrade.getItem())){
 
 
             Item specialUpgrade = upgrade.getItem();
             int maxUpgrades = thisTier.upgradeLimit;
             if(this.element == null) maxUpgrades += Constants.NON_ELEMENTAL_UPGRADE_BONUS;
 
-            if(SpellBladeHelper.getTotalUpgrades(wand) < maxUpgrades
-                    && SpellBladeHelper.getUpgradeLevel(wand, specialUpgrade) < Constants.UPGRADE_STACK_LIMIT){
+            if(WandHelper.getTotalUpgrades(wand) < maxUpgrades
+                    && WandHelper.getUpgradeLevel(wand, specialUpgrade) < Constants.UPGRADE_STACK_LIMIT){
 
-                SpellBladeHelper.applyUpgrade(wand, specialUpgrade);
+                WandHelper.applyUpgrade(wand, specialUpgrade);
 
                 if(specialUpgrade == WizardryItems.storage_upgrade){
                     int prevMaxMana = this.getManaCapacity(wand);
-                    double manaModifier = 1.0 + Constants.STORAGE_INCREASE_PER_LEVEL * SpellBladeHelper.getUpgradeLevel(wand, upgrade.getItem());
+                    double manaModifier = 1.0 + Constants.STORAGE_INCREASE_PER_LEVEL * WandHelper.getUpgradeLevel(wand, upgrade.getItem());
                     int maxMana = (int) (prevMaxMana * manaModifier);
                     WizardryUtil.setMaxMana(wand, maxMana);
                 }else if(specialUpgrade == WizardryItems.attunement_upgrade){
 
-                    int newSlotCount = WizardryUtil.BASE_SPELL_SLOTS + SpellBladeHelper.getUpgradeLevel(wand,
+                    int newSlotCount = WizardryUtil.BASE_SPELL_SLOTS + WandHelper.getUpgradeLevel(wand,
                             WizardryItems.attunement_upgrade);
 
                     Spell[] spells = SpellBladeHelper.getSpells(wand);
@@ -424,7 +416,7 @@ public class WizardryCore {
                 upgrade.shrink(1);
                 if(player != null){
                     WizardryAdvancementTriggers.special_upgrade.triggerFor(player);
-                    if(SpellBladeHelper.getTotalUpgrades(wand) == Tier.MASTER.upgradeLimit){
+                    if(WandHelper.getTotalUpgrades(wand) == Tier.MASTER.upgradeLimit){
                         WizardryAdvancementTriggers.max_out_wand.triggerFor(player);
                     }
                 }
@@ -475,7 +467,7 @@ public class WizardryCore {
         if (stack.getTagCompound() != null && stack.hasTagCompound() && stack.getTagCompound().getCompoundTag(SpellBladeHelper.WIZARDRY_DATA).hasKey(SpellBladeHelper.SPELL_ARRAY_KEY)) {
             NBTTagCompound nbt = stack.getTagCompound();
             int[] spells = nbt.getCompoundTag(SpellBladeHelper.WIZARDRY_DATA).getIntArray(SpellBladeHelper.SPELL_ARRAY_KEY);
-            int expectedSlotCount = WizardryUtil.BASE_SPELL_SLOTS + SpellBladeHelper.getUpgradeLevel(stack,
+            int expectedSlotCount = WizardryUtil.BASE_SPELL_SLOTS + WandHelper.getUpgradeLevel(stack,
                     WizardryItems.attunement_upgrade);
             if (spells.length < expectedSlotCount) {
                 spells = new int[expectedSlotCount];

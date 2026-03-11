@@ -5,10 +5,10 @@ import net.minecraftforge.common.config.Config;
 
 @Config(modid = Tags.MOD_ID)
 public final class ModConfig {
-    @Config.Comment("test")
+    @Config.Comment("Wizardry compact")
     public static boolean enableWizardryCompact = true;
-    @Config.Comment("test1")
+    @Config.Comment("SpellBlade mana capacity increase per level")
     public static double manaCapacityIncrease = 0.25;
-    @Config.Comment("test2")
+    @Config.Comment("SpellBlade spell potency increase per level")
     public static double spellPotencyIncrease = 0.25;
 }

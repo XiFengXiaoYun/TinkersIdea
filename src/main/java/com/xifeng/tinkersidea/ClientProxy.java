@@ -23,7 +23,6 @@ public class ClientProxy extends CommonProxy {
             ToolBuildGuiInfo info = new ToolBuildGuiInfo(WeaponAll.spellBlade);
             info.addSlotPosition(12, 62);
             info.addSlotPosition(48, 26);
-            info.addSlotPosition(11, 44);
             info.addSlotPosition(30, 44);
             TinkerRegistryClient.addToolBuilding(info);
         }

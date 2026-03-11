@@ -6,7 +6,6 @@ import slimeknights.tconstruct.library.modifiers.IModifier;
 import slimeknights.tconstruct.library.tools.IToolPart;
 import slimeknights.tconstruct.library.tools.ToolCore;
 
-//Let's do this stupid proxy
 public class CommonProxy {
 
     public void initToolGuis() {
@@ -16,12 +15,6 @@ public class CommonProxy {
     }
 
     public <T extends Item & IToolPart> void registerToolPartModel(T part) {
-    }
-
-    public void registerSubscriptions() {
-    }
-
-    public void renderScreenFullColor(int color, boolean bool) {
     }
 
     public void registerModifierModel(IModifier mod, ResourceLocation rl) {

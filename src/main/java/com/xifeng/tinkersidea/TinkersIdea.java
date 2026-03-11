@@ -1,7 +1,8 @@
 package com.xifeng.tinkersidea;
-import com.xifeng.tinkersidea.Weapons.wizardry.SpellBladeHelper;
 import com.xifeng.tinkersidea.config.ModConfig;
+import com.xifeng.tinkersidea.event.TinkersWizardryEvent;
 import com.xifeng.tinkersidea.modifiers.ModifierRegister;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -26,12 +27,12 @@ public class TinkersIdea {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         ModifierRegister.initModifiers();
+        //MinecraftForge.EVENT_BUS.register(TinkersWizardryEvent.class);
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         proxy.initToolGuis();
-        SpellBladeHelper.addUpgrade();
     }
 
     @Mod.EventHandler

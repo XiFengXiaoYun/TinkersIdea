@@ -1,12 +1,19 @@
 item.greatsword.name=大剑
 item.greatsword.desc=大范围横扫攻击，伤害较高，攻速较慢，需要两只手挥动，在面对一大群敌人时表现出色。快去抵御僵尸入侵吧！
-item.spellblade.name=施法匕首
+item.spellblade.name=施法锋刃
 item.spellblade.desc=近战攻击可附加魔法伤害，同时右键还能施放法术。谁说法师怕近战？
 
 item.magic_focus.name=施法核心
 stat.magic_focus.name=施法核心
+stat.spellblade.spellPotency.name=法术强度
+stat.spellblade.maxMana.name=魔力容量
+stat.spellblade.spellPotency.desc=可以提升法术造成的伤害
+stat.spellblade.maxMana.desc=决定了最终的魔力容量
+
 
 attribute.name.ti.magicPotency=法术强度
 
 modifier.sweep_edge.name=横扫之刃
-modifier.sweep_edge.desc=§o横扫千军！§r\n提高横扫攻击的威力
+modifier.sweep_edge.desc=§o横扫千军！§r\n提高横扫攻击的威力与范围
+modifier.magic_data.name=魔力
+modifier.magic_data.desc=§o匠心制作§r\n使用奥术宝典升级后，可以提升该器械的魔法性能

@@ -66,6 +66,7 @@ public class GreatSword extends SwordCore {
             double d0 = player.distanceWalkedModified - player.prevDistanceWalkedModified;
             boolean flag = true;
             float sweepLevel = 0;
+            double reach = player.getDistanceSq(entity);
             if (Enchantments.SWEEPING != null) {
                 sweepLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.SWEEPING, stack);
             }
@@ -74,8 +75,8 @@ public class GreatSword extends SwordCore {
             }
             boolean flag2 = player.fallDistance > 0.0F && !player.onGround && !player.isOnLadder() && !player.isInWater() && !player.isPotionActive(MobEffects.BLINDNESS) && !player.isRiding();
             if(flag && !player.isSprinting() && !flag2 && player.onGround && d0 < (double) player.getAIMoveSpeed()) {
-                for(EntityLivingBase entitylivingbase : player.getEntityWorld().getEntitiesWithinAABB(EntityLivingBase.class, entity.getEntityBoundingBox().grow(3.0 + 0.75 * sweepLevel))) {
-                    if(entitylivingbase != player && entitylivingbase != entity && !player.isOnSameTeam(entitylivingbase) && player.getDistanceSq(entitylivingbase) < 9.0D) {
+                for(EntityLivingBase entitylivingbase : player.getEntityWorld().getEntitiesWithinAABB(EntityLivingBase.class, entity.getEntityBoundingBox().grow(3.5 + 0.5 * sweepLevel))) {
+                    if(entitylivingbase != player && entitylivingbase != entity && !player.isOnSameTeam(entitylivingbase) && player.getDistanceSq(entitylivingbase) <= reach) {
                         entitylivingbase.knockBack(player, 0.75F, MathHelper.sin(player.rotationYaw * 0.017453292F), -MathHelper.cos(player.rotationYaw * 0.017453292F));
                         super.dealDamage(stack, player, entitylivingbase, damage * (0.25f + 0.25f * sweepLevel));
                     }
