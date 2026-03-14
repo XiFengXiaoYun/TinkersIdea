@@ -55,7 +55,9 @@ public final class SpellBladeHelper {
 
     public static String getElement(ItemStack stack) {
         NBTTagCompound nbt = getWizardryData(stack);
-        if(nbt.hasKey(ELEMENT)) return nbt.getString(ELEMENT);
+        if(nbt.hasKey(ELEMENT)) {
+            return nbt.getString(ELEMENT);
+        }
         nbt.setString(ELEMENT, DefaultElement);
         return DefaultElement;
     }
@@ -63,6 +65,7 @@ public final class SpellBladeHelper {
     public static void setElement(ItemStack stack, String element) {
         NBTTagCompound nbt = getWizardryData(stack);
         nbt.setString(ELEMENT, element);
+
     }
 
     public static Spell[] getSpells(ItemStack stack) {

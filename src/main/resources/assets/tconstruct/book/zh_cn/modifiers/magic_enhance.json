@@ -1,0 +1,15 @@
+{
+  "modifier": "magic_enhance",
+  "text": [
+    {
+      "text": "借助魔力水晶的力量，可以提升施法锋刃的法术伤害"
+    }
+  ],
+  "effects": [
+    "不必担心数值膨胀",
+    "多个等级"
+  ],
+  "demoTool": [
+    "tinkersidea:spellblade"
+  ]
+}

@@ -11,6 +11,7 @@ import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.item.IManaStoringItem;
 import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.item.IWorkbenchItem;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.SpellModifiers;
 import mcp.MethodsReturnNonnullByDefault;
@@ -26,6 +27,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -56,6 +58,13 @@ public class SpellBlade extends SwordCore implements IWorkbenchItem, ISpellCasti
         this.addCategory(Category.WEAPON, SpecialCategory.Wizardry);
         setTranslationKey("spellblade").setRegistryName("spellblade");
         this.wizardryCore = new WizardryCore(this, Element.MAGIC, this);
+        this.addPropertyOverride(new ResourceLocation("pointing"),
+                (s, w, e) -> e != null && e.getActiveItemStack() == s
+                        && (s.getItemUseAction() == SpellActions.POINT
+                        || s.getItemUseAction() == SpellActions.POINT_UP
+                        || s.getItemUseAction() == SpellActions.POINT_DOWN
+                        || s.getItemUseAction() == SpellActions.GRAPPLE
+                        || s.getItemUseAction() == SpellActions.SUMMON) ? 1 : 0);
     }
 
     @Override
@@ -257,11 +266,17 @@ public class SpellBlade extends SwordCore implements IWorkbenchItem, ISpellCasti
 
     @Override
     public boolean canCast(ItemStack stack, Spell spell, EntityPlayer caster, EnumHand hand, int castingTick, SpellModifiers modifiers){
+        if(ToolHelper.isBroken(stack)){
+            return false;
+        }
         return wizardryCore.canCast(stack, spell, caster, hand, castingTick, modifiers);
     }
 
     @Override
     public boolean cast(ItemStack stack, Spell spell, EntityPlayer caster, EnumHand hand, int castingTick, SpellModifiers modifiers){
+        if(ToolHelper.isBroken(stack)){
+            return false;
+        }
         return wizardryCore.cast(stack, spell, caster, hand, castingTick, modifiers);
     }
 
@@ -294,5 +309,10 @@ public class SpellBlade extends SwordCore implements IWorkbenchItem, ISpellCasti
     @Override
     public void onClearButtonPressed(EntityPlayer player, Slot centre, Slot crystals, Slot upgrade, Slot[] spellBooks){
         wizardryCore.onClearButtonPressed(player, centre, crystals, upgrade, spellBooks);
+    }
+
+    public void setElement(ItemStack stack, Element element){
+        wizardryCore.setElement(stack, element);
+        SpellBladeHelper.setElement(stack, element.name());
     }
 }

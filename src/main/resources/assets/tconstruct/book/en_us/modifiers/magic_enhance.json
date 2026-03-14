@@ -1,0 +1,15 @@
+{
+  "modifier": "magic_enhance",
+  "text": [
+    {
+      "text": "By utilizing the power of magic crystals, the spell damage of the spellblade can be increased"
+    }
+  ],
+  "effects": [
+    "No need to worry about value inflation",
+    "Multiple levels"
+  ],
+  "demoTool": [
+    "tinkersidea:spellblade"
+  ]
+}

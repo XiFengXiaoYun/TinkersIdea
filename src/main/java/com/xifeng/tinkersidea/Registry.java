@@ -1,5 +1,6 @@
 package com.xifeng.tinkersidea;
 
+import com.google.common.collect.ImmutableSet;
 import com.xifeng.tinkersidea.Weapons.WeaponAll;
 import com.xifeng.tinkersidea.materials.MagicMaterials;
 import net.minecraft.item.Item;
@@ -9,13 +10,17 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import slimeknights.tconstruct.library.TinkerRegistry;
 import slimeknights.tconstruct.library.tools.ToolCore;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Mod.EventBusSubscriber(modid = Tags.MOD_ID)
 public final class Registry {
+    public static final Set<ToolCore> tools = new HashSet<>();
     //register tools here
     @SubscribeEvent
     public static void registerTools(RegistryEvent.Register<Item> event) {
         MagicMaterials.initMagicMaterials();
-        WeaponAll.initWeapon(event);
+        WeaponAll.initWeapon(event, tools);
     }
 
     public static void initForgeTool(ToolCore core, RegistryEvent.Register<Item> event) {
@@ -28,5 +33,9 @@ public final class Registry {
         event.getRegistry().register(core);
         TinkerRegistry.registerToolCrafting(core);
         TinkersIdea.proxy.registerToolModel(core);
+    }
+
+    public static Set<ToolCore> getTools() {
+        return ImmutableSet.copyOf(tools);
     }
 }

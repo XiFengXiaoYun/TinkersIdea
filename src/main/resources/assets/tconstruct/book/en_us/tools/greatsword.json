@@ -1,0 +1,19 @@
+{
+  "tool": "greatsword",
+  "text": [
+    {
+      "text": "Extremely powerful weapon with outstanding group effectiveness."
+    },
+    {
+      "text": "\n"
+    },
+    {
+      "text": "Lower durability, higher damage."
+    }
+  ],
+  "properties": [
+    "Higher damage but slower speed",
+    "Off-hand ineffective",
+    "Large sweeping range"
+  ]
+}

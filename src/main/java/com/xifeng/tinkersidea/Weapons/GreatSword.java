@@ -66,7 +66,8 @@ public class GreatSword extends SwordCore {
             double d0 = player.distanceWalkedModified - player.prevDistanceWalkedModified;
             boolean flag = true;
             float sweepLevel = 0;
-            double reach = player.getDistanceSq(entity);
+            double reach = player.getDistanceSq(entity) + 1.0;
+            //We need sweep
             if (Enchantments.SWEEPING != null) {
                 sweepLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.SWEEPING, stack);
             }
@@ -104,7 +105,6 @@ public class GreatSword extends SwordCore {
         data.handle(handle);
 
         data.attack += 4;
-        data.durability *= 1.0;
         return data;
     }
 

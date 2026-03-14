@@ -9,8 +9,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.RegistryEvent;
 import slimeknights.tconstruct.library.TinkerRegistry;
 import slimeknights.tconstruct.library.tools.Pattern;
+import slimeknights.tconstruct.library.tools.ToolCore;
 import slimeknights.tconstruct.library.tools.ToolPart;
 import slimeknights.tconstruct.tools.TinkerTools;
+
+import java.util.Set;
 
 public class WeaponAll {
     public static GreatSword greatSword;
@@ -18,11 +21,11 @@ public class WeaponAll {
 
     public static ToolPart magicFocus;
 
-    public static void initWeapon(RegistryEvent.Register<Item> event) {
+    public static void initWeapon(RegistryEvent.Register<Item> event, Set<ToolCore> tools) {
         greatSword = new GreatSword();
         Registry.initForgeTool(greatSword, event);
+        tools.add(greatSword);
         if(TinkersIdea.enableWizardry()) {
-            System.out.println("Wizardry Start!");
 
             magicFocus = new ToolPart(288);
             magicFocus.setTranslationKey("magic_focus").setRegistryName(Tags.MOD_ID, "magic_focus");
@@ -34,6 +37,7 @@ public class WeaponAll {
 
             spellBlade = new SpellBlade();
             Registry.initTool(spellBlade, event);
+            tools.add(spellBlade);
         }
     }
 }

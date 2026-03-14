@@ -1,0 +1,15 @@
+{
+  "modifier": "sweep_edge",
+  "text": [
+    {
+      "text": "剑刃上贴一把铁剑能不能增加横扫范围？"
+    }
+  ],
+  "effects": [
+    "使用铁剑可以使武器获得横扫之刃的效果",
+    "仅适用于横扫类武器"
+  ],
+  "demoTool": [
+    "tinkersidea:greatsword"
+  ]
+}

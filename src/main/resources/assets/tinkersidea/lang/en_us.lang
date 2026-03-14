@@ -15,3 +15,5 @@ modifier.sweep_edge.name=Sweep Edge
 modifier.sweep_edge.desc=§oSweep all before one!§r\nEnhance the power of sweeping attacks
 modifier.magic_data.name=Magic
 modifier.magic_data.desc=§oCrafted with Excellence...§r\nAfter upgrading with the Arcane Tome, the magical performance of this weapon can be enhanced
+modifier.magic_enhance.name=Magic Enhance
+modifier.magic_enhance.desc=§oThe power of magic§r\n Increase the spell potency of the weapon

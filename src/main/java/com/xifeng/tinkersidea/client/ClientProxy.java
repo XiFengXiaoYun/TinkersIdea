@@ -1,9 +1,14 @@
-package com.xifeng.tinkersidea;
+package com.xifeng.tinkersidea.client;
 
+import com.xifeng.tinkersidea.CommonProxy;
 import com.xifeng.tinkersidea.Weapons.WeaponAll;
+import com.xifeng.tinkersidea.client.book.BookTransformerModifiers;
+import com.xifeng.tinkersidea.client.book.BookTransformerWeapons;
 import net.minecraft.item.Item;
+import slimeknights.mantle.client.book.repository.FileRepository;
 import slimeknights.tconstruct.common.ModelRegisterUtil;
 import slimeknights.tconstruct.library.TinkerRegistryClient;
+import slimeknights.tconstruct.library.book.TinkerBook;
 import slimeknights.tconstruct.library.client.ToolBuildGuiInfo;
 import slimeknights.tconstruct.library.tools.IToolPart;
 import slimeknights.tconstruct.library.tools.ToolCore;
@@ -33,6 +38,13 @@ public class ClientProxy extends CommonProxy {
         ModelRegisterUtil.registerToolModel(toolCore);
     }
 
+    @Override
+    public void postInit() {
+        TinkerBook.INSTANCE.addTransformer(new BookTransformerWeapons(new FileRepository("tconstruct:book")));
+        TinkerBook.INSTANCE.addTransformer(new BookTransformerModifiers(new FileRepository("tconstruct:book")));
+    }
+
+    @Override
     public <T extends Item & IToolPart> void registerToolPartModel(T part) {
         ModelRegisterUtil.registerPartModel(part);
     }

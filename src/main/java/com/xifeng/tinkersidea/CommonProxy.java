@@ -14,6 +14,10 @@ public class CommonProxy {
     public void registerToolModel(ToolCore tc) {
     }
 
+    public void postInit() {
+
+    }
+
     public <T extends Item & IToolPart> void registerToolPartModel(T part) {
     }
 

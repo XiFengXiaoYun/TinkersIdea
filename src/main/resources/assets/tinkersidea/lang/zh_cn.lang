@@ -17,3 +17,5 @@ modifier.sweep_edge.name=横扫之刃
 modifier.sweep_edge.desc=§o横扫千军！§r\n提高横扫攻击的威力与范围
 modifier.magic_data.name=魔力
 modifier.magic_data.desc=§o匠心制作§r\n使用奥术宝典升级后，可以提升该器械的魔法性能
+modifier.magic_enhance.name=魔力增强
+modifier.magic_enhance.desc=§o魔法的力量§r\n提高器械的法术强度

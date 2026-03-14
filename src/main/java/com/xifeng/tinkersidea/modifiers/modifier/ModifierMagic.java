@@ -10,7 +10,7 @@ public class ModifierMagic extends ToolModifier {
     public static ModifierMagic INSTANCE = new ModifierMagic();
 
     public ModifierMagic() {
-        this("magic_data", 0x114514);
+        this("magic_data", 0xcb3ff7);
     }
 
     public ModifierMagic(String identifier, int color) {

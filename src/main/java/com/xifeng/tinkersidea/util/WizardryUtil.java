@@ -117,7 +117,6 @@ public class WizardryUtil {
     }
 
     public static int getMana(ItemStack stack) {
-        //MagicNBT nbt = MagicNBT.from(stack);
         NBTTagCompound tag = SpellBladeHelper.getWizardryData(stack);
         return tag.getInteger("mana");
     }
@@ -155,11 +154,4 @@ public class WizardryUtil {
             setMana(stack, Math.max(amount, 0));
         }
     }
-
-    public static void setPotency(ItemStack stack, float potency) {
-        MagicNBT nbt = new MagicNBT(TagUtil.getToolTag(stack));
-        nbt.spellPotency += potency;
-        TagUtil.setToolTag(stack, nbt.get());
-    }
-
 }

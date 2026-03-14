@@ -1,6 +1,5 @@
 package com.xifeng.tinkersidea.Weapons.wizardry;
 
-import com.xifeng.tinkersidea.config.ModConfig;
 import com.xifeng.tinkersidea.modifiers.modifier.ModifierMagic;
 import com.xifeng.tinkersidea.util.WizardryUtil;
 import electroblob.wizardry.Wizardry;
@@ -42,13 +41,14 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import slimeknights.tconstruct.library.tools.SwordCore;
+import slimeknights.tconstruct.library.utils.ToolHelper;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class WizardryCore {
     private final IManaStoringItem manaStoringItem;
-    private final Element element;
+    private Element element;
     private final SwordCore core;
     public WizardryCore(ISpellCastingItem spellCastingItem, Element element, SwordCore core) {
         this.manaStoringItem = (IManaStoringItem) spellCastingItem;
@@ -62,6 +62,14 @@ public class WizardryCore {
 
     public void setTier(ItemStack stack, String tierId) {
         SpellBladeHelper.setTier(stack, tierId);
+    }
+
+    public Element getElement(ItemStack stack) {
+        return element;
+    }
+
+    public void setElement(ItemStack stack, Element element) {
+        this.element = element;
     }
 
     public Spell getCurrentSpell(ItemStack stack){
@@ -109,6 +117,7 @@ public class WizardryCore {
     }
 
     public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isHeldInMainhand){
+        if(ToolHelper.isBroken(stack)) return;
 
         boolean isHeld = isHeldInMainhand || entity instanceof EntityLivingBase && ItemStack.areItemStacksEqual(stack, ((EntityLivingBase) entity).getHeldItemOffhand());
         if (!Wizardry.settings.wandsMustBeHeldToDecrementCooldown || isHeld) {

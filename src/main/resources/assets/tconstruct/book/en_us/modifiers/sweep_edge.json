@@ -1,0 +1,15 @@
+{
+  "modifier": "sweep_edge",
+  "text": [
+    {
+      "text": "Can sticking an iron sword on the blade increase the sweeping range?"
+    }
+  ],
+  "effects": [
+    "Using an iron sword can give the weapon the sweeping edge effect",
+    "Only applicable to sweeping-type weapons"
+  ],
+  "demoTool": [
+    "tinkersidea:greatsword"
+  ]
+}
