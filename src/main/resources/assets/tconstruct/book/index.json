@@ -1,0 +1,10 @@
+[
+  {
+    "name": "magicmaterials",
+    "icon": {
+      "item": {
+        "id": "minecraft:apple"
+      }
+    }
+  }
+]

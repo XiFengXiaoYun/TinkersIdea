@@ -31,6 +31,7 @@ public class GreatSword extends SwordCore {
                 PartMaterialType.head(TinkerTools.swordBlade),
                 PartMaterialType.head(TinkerTools.swordBlade),
                 PartMaterialType.extra(TinkerTools.wideGuard));
+                //PartMaterialType.extra(TinkerTools.wideGuard));
         this.addCategory(Category.WEAPON);
 
         setTranslationKey("greatsword").setRegistryName("greatsword");

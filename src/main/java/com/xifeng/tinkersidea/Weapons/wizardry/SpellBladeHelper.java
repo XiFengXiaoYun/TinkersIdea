@@ -48,6 +48,12 @@ public final class SpellBladeHelper {
         return DefaultTier;
     }
 
+    public static String getTier(NBTTagCompound nbt) {
+        NBTTagCompound data = nbt.getCompoundTag(WIZARDRY_DATA);
+        if(data.hasKey(TIER)) return data.getString(TIER);
+        return DefaultTier;
+    }
+
     public static void setTier(ItemStack stack, String tierName) {
         NBTTagCompound nbt = getWizardryData(stack);
         nbt.setString(TIER, tierName);
@@ -65,7 +71,6 @@ public final class SpellBladeHelper {
     public static void setElement(ItemStack stack, String element) {
         NBTTagCompound nbt = getWizardryData(stack);
         nbt.setString(ELEMENT, element);
-
     }
 
     public static Spell[] getSpells(ItemStack stack) {

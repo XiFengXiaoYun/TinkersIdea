@@ -4,7 +4,7 @@ item.spellblade.name=施法锋刃
 item.spellblade.desc=近战攻击可附加魔法伤害，同时右键还能施放法术。谁说法师怕近战？
 
 item.magic_focus.name=施法核心
-stat.magic_focus.name=施法核心
+stat.magic_focus.name=魔力
 stat.spellblade.spellPotency.name=法术强度
 stat.spellblade.maxMana.name=魔力容量
 stat.spellblade.spellPotency.desc=可以提升法术造成的伤害
@@ -19,3 +19,5 @@ modifier.magic_data.name=魔力
 modifier.magic_data.desc=§o匠心制作§r\n使用奥术宝典升级后，可以提升该器械的魔法性能
 modifier.magic_enhance.name=魔力增强
 modifier.magic_enhance.desc=§o魔法的力量§r\n提高器械的法术强度
+modifier.magic_upgrade.name=魔力扩容
+modifier.magic_upgrade.desc=§o魔法的力量§r\n提高器械的魔力容量

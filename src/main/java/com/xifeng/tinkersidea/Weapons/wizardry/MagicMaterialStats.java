@@ -32,11 +32,11 @@ public class MagicMaterialStats extends AbstractMaterialStats {
         return formatNumber(LOC_MaxMana, Color_MaxMana, maxMana);
     }
 
-    private static String descSpellPotency(float spellPotency) {
+    private static String descSpellPotency() {
         return Util.translate(LOC_SpellPotencyDesc);
     }
 
-    private static String descMaxMana(int maxMana) {
+    private static String descMaxMana() {
         return Util.translate(LOC_MaxManaDesc);
     }
 
@@ -47,6 +47,6 @@ public class MagicMaterialStats extends AbstractMaterialStats {
 
     @Override
     public List<String> getLocalizedDesc() {
-        return ImmutableList.of(descSpellPotency(spellPotency), descMaxMana(maxMana));
+        return ImmutableList.of(descSpellPotency(), descMaxMana());
     }
 }

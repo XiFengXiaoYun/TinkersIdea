@@ -15,9 +15,13 @@ public class MagicNBT extends ToolNBT {
 
     public MagicNBT(NBTTagCompound nbt) {
         super(nbt);
+        if (nbt != null) {
+            this.spellPotency = nbt.getFloat("spellPotency");
+            this.maxMana = nbt.getInteger("maxMana");
+        }
     }
 
-    public MagicNBT magic(MagicMaterialStats stats) {
+    public void magic(MagicMaterialStats stats) {
         float spell = 0.0f;
         int maxMana = 100;
         if(stats != null) {
@@ -26,7 +30,6 @@ public class MagicNBT extends ToolNBT {
         }
         this.spellPotency = spell;
         this.maxMana = maxMana;
-        return this;
     }
 
     public void read(NBTTagCompound nbt) {

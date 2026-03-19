@@ -1,6 +1,7 @@
 package com.xifeng.tinkersidea.Weapons.wizardry;
 
 import com.xifeng.tinkersidea.modifiers.modifier.ModifierMagic;
+import com.xifeng.tinkersidea.modifiers.modifier.ModifierMagicUpgrade;
 import com.xifeng.tinkersidea.util.WizardryUtil;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Constants;
@@ -9,8 +10,6 @@ import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.data.SpellGlyphData;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.event.SpellCastEvent;
-import electroblob.wizardry.item.IManaStoringItem;
-import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.packet.PacketCastSpell;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.Spells;
@@ -40,20 +39,17 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import slimeknights.tconstruct.library.tools.SwordCore;
+import slimeknights.tconstruct.library.modifiers.TinkerGuiException;
+import slimeknights.tconstruct.library.tinkering.TinkersItem;
+import slimeknights.tconstruct.library.utils.ToolBuilder;
 import slimeknights.tconstruct.library.utils.ToolHelper;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class WizardryCore {
-    private final IManaStoringItem manaStoringItem;
-    private Element element;
-    private final SwordCore core;
-    public WizardryCore(ISpellCastingItem spellCastingItem, Element element, SwordCore core) {
-        this.manaStoringItem = (IManaStoringItem) spellCastingItem;
-        this.core=core;
-        this.element=element;
+
+    public WizardryCore() {
     }
 
     public Tier getTier(ItemStack stack) {
@@ -65,11 +61,11 @@ public class WizardryCore {
     }
 
     public Element getElement(ItemStack stack) {
-        return element;
+        return Element.valueOf(SpellBladeHelper.getElement(stack));
     }
 
     public void setElement(ItemStack stack, Element element) {
-        this.element = element;
+        SpellBladeHelper.setElement(stack, element.name());
     }
 
     public Spell getCurrentSpell(ItemStack stack){
@@ -116,7 +112,7 @@ public class WizardryCore {
         return WizardryUtil.getMaxMana(stack);
     }
 
-    public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isHeldInMainhand){
+    public void onUpdate(ItemStack stack, World world, Entity entity, boolean isHeldInMainhand){
         if(ToolHelper.isBroken(stack)) return;
 
         boolean isHeld = isHeldInMainhand || entity instanceof EntityLivingBase && ItemStack.areItemStacksEqual(stack, ((EntityLivingBase) entity).getHeldItemOffhand());
@@ -132,8 +128,7 @@ public class WizardryCore {
     }
 
     public boolean canContinueUsing(ItemStack oldStack, ItemStack newStack){
-        if(ItemStack.areItemsEqualIgnoreDurability(oldStack, newStack)) return true;
-        return core.canContinueUsing(oldStack, newStack);
+        return ItemStack.areItemsEqualIgnoreDurability(oldStack, newStack);
     }
 
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged){
@@ -151,11 +146,13 @@ public class WizardryCore {
     }
 
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, World world, List<String> text, net.minecraft.client.util.ITooltipFlag advanced){
+    public void addInformation(ItemStack stack, List<String> text, net.minecraft.client.util.ITooltipFlag advanced){
         EntityPlayer player = net.minecraft.client.Minecraft.getMinecraft().player;
         if (player == null) { return; }
 
         Tier tier = getTier(stack);
+
+        Element element = getElement(stack);
 
         if(element != null) text.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wand.buff",
                 new Style().setColor(TextFormatting.DARK_GRAY),
@@ -180,16 +177,17 @@ public class WizardryCore {
 
         Spell spell = SpellBladeHelper.getCurrentSpell(stack);
         Tier tier = getTier(stack);
+        Element element = getElement(stack);
         SpellModifiers modifiers = WizardryUtil.calculateModifiers(stack, player, spell, tier, element);
 
         if(canCast(stack, spell, player, hand, 0, modifiers)){
-            int chargeup = (int)(spell.getChargeup() * modifiers.get(SpellModifiers.CHARGEUP));
+            int charge = (int)(spell.getChargeup() * modifiers.get(SpellModifiers.CHARGEUP));
 
-            if(spell.isContinuous || chargeup > 0){
+            if(spell.isContinuous || charge > 0){
                 if(!player.isHandActive()){
                     player.setActiveHand(hand);
                     if(WizardData.get(player) != null) WizardData.get(player).itemCastingModifiers = modifiers;
-                    if(chargeup > 0 && world.isRemote) Wizardry.proxy.playChargeupSound(player);
+                    if(charge > 0 && world.isRemote) Wizardry.proxy.playChargeupSound(player);
                     return new ActionResult<>(EnumActionResult.SUCCESS, stack);
                 }
             }else{
@@ -212,6 +210,8 @@ public class WizardryCore {
 
             SpellModifiers modifiers;
 
+            Element element = getElement(stack);
+
             if(WizardData.get(player) != null){
                 modifiers = WizardData.get(player).itemCastingModifiers;
             }else{
@@ -219,11 +219,11 @@ public class WizardryCore {
             }
 
             int useTick = stack.getMaxItemUseDuration() - count;
-            int chargeup = (int)(spell.getChargeup() * modifiers.get(SpellModifiers.CHARGEUP));
+            int charge = (int)(spell.getChargeup() * modifiers.get(SpellModifiers.CHARGEUP));
 
             if(spell.isContinuous){
-                if(useTick >= chargeup){
-                    int castingTick = useTick - chargeup;
+                if(useTick >= charge){
+                    int castingTick = useTick - charge;
                     if(castingTick == 0 || canCast(stack, spell, player, player.getActiveHand(), castingTick, modifiers)){
                         cast(stack, spell, player, player.getActiveHand(), castingTick, modifiers);
                     }else{
@@ -231,7 +231,7 @@ public class WizardryCore {
                     }
                 }
             }else{
-                if(chargeup > 0 && useTick == chargeup){
+                if(charge > 0 && useTick == charge){
                     cast(stack, spell, player, player.getActiveHand(), 0, modifiers);
                 }
             }
@@ -318,6 +318,7 @@ public class WizardryCore {
 
             Spell spell = SpellBladeHelper.getCurrentSpell(stack);
             Tier tier = getTier(stack);
+            Element element = getElement(stack);
 
             SpellModifiers modifiers;
 
@@ -343,7 +344,7 @@ public class WizardryCore {
         }
     }
 
-    public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity, EnumHand hand){
+    public boolean itemInteractionForEntity(EntityPlayer player, EntityLivingBase entity){
         if(player.isSneaking() && entity instanceof EntityPlayer && WizardData.get(player) != null){
             String string = WizardData.get(player).toggleAlly((EntityPlayer)entity) ? "item." + Wizardry.MODID + ":wand.addally"
                     : "item." + Wizardry.MODID + ":wand.removeally";
@@ -357,82 +358,99 @@ public class WizardryCore {
         return WizardryUtil.BASE_SPELL_SLOTS + WandHelper.getUpgradeLevel(stack, WizardryItems.attunement_upgrade);
     }
 
+    private static void rebuildTool(ItemStack copy){
+        if(copy.getTagCompound() != null && copy.getItem() instanceof TinkersItem) {
+            try {
+                ToolBuilder.rebuildTool(copy.getTagCompound(), (TinkersItem) copy.getItem());
+            } catch (TinkerGuiException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     public ItemStack applyUpgrade(EntityPlayer player, ItemStack wand, ItemStack upgrade){
         Tier thisTier = getTier(wand);
+        ItemStack copy = wand.copy();
+        boolean needRebuild = false;
 
         if(upgrade.getItem() == WizardryItems.arcane_tome){
             Tier tier = Tier.values()[upgrade.getItemDamage()];
 
             if((player == null || player.isCreative() || Wizardry.settings.legacyWandLevelling
-                    || WandHelper.getProgression(wand) >= tier.getProgression())
+                    || WandHelper.getProgression(copy) >= tier.getProgression())
                     && tier == thisTier.next() && thisTier != Tier.MASTER){
 
                 if(Wizardry.settings.legacyWandLevelling){
-                    WandHelper.setProgression(wand, 0);
+                    WandHelper.setProgression(copy, 0);
                 }else{
-                    WandHelper.setProgression(wand, WandHelper.getProgression(wand) - tier.getProgression());
+                    WandHelper.setProgression(copy, WandHelper.getProgression(copy) - tier.getProgression());
                 }
 
                 if(player != null) WizardData.get(player).setTierReached(tier);
 
-                this.setTier(wand, tier.name());
-                ModifierMagic.INSTANCE.apply(wand);
+                this.setTier(copy, tier.name());
+                ModifierMagic.INSTANCE.apply(copy);
                 upgrade.shrink(1);
-
-                return wand;
+                rebuildTool(copy);
+                return copy;
             }
 
-        }else if(WandHelper.isWandUpgrade(upgrade.getItem())){
+        } else if (WandHelper.isWandUpgrade(upgrade.getItem())){
 
 
             Item specialUpgrade = upgrade.getItem();
             int maxUpgrades = thisTier.upgradeLimit;
-            if(this.element == null) maxUpgrades += Constants.NON_ELEMENTAL_UPGRADE_BONUS;
+            Element element = getElement(copy);
+            if(element == null) maxUpgrades += Constants.NON_ELEMENTAL_UPGRADE_BONUS;
 
-            if(WandHelper.getTotalUpgrades(wand) < maxUpgrades
-                    && WandHelper.getUpgradeLevel(wand, specialUpgrade) < Constants.UPGRADE_STACK_LIMIT){
+            if(WandHelper.getTotalUpgrades(copy) < maxUpgrades
+                    && WandHelper.getUpgradeLevel(copy, specialUpgrade) < Constants.UPGRADE_STACK_LIMIT){
 
-                WandHelper.applyUpgrade(wand, specialUpgrade);
+                WandHelper.applyUpgrade(copy, specialUpgrade);
 
                 if(specialUpgrade == WizardryItems.storage_upgrade){
-                    int prevMaxMana = this.getManaCapacity(wand);
-                    double manaModifier = 1.0 + Constants.STORAGE_INCREASE_PER_LEVEL * WandHelper.getUpgradeLevel(wand, upgrade.getItem());
-                    int maxMana = (int) (prevMaxMana * manaModifier);
-                    WizardryUtil.setMaxMana(wand, maxMana);
-                }else if(specialUpgrade == WizardryItems.attunement_upgrade){
 
-                    int newSlotCount = WizardryUtil.BASE_SPELL_SLOTS + WandHelper.getUpgradeLevel(wand,
+                    ModifierMagicUpgrade.INSTANCE.apply(copy);
+
+                    upgrade.shrink(1);
+
+                    rebuildTool(copy);
+                    return copy;
+
+                } else if (specialUpgrade == WizardryItems.attunement_upgrade){
+
+                    int newSlotCount = WizardryUtil.BASE_SPELL_SLOTS + WandHelper.getUpgradeLevel(copy,
                             WizardryItems.attunement_upgrade);
 
-                    Spell[] spells = SpellBladeHelper.getSpells(wand);
+                    Spell[] spells = SpellBladeHelper.getSpells(copy);
                     Spell[] newSpells = new Spell[newSlotCount];
 
                     for(int i = 0; i < newSpells.length; i++){
                         newSpells[i] = i < spells.length && spells[i] != null ? spells[i] : Spells.none;
                     }
 
-                    SpellBladeHelper.setSpells(wand, newSpells);
+                    SpellBladeHelper.setSpells(copy, newSpells);
 
-                    int[] cooldowns = SpellBladeHelper.getCooldowns(wand);
+                    int[] cooldowns = SpellBladeHelper.getCooldowns(copy);
                     int[] newCooldowns = new int[newSlotCount];
 
                     if(cooldowns.length > 0){
                         System.arraycopy(cooldowns, 0, newCooldowns, 0, cooldowns.length);
                     }
-                    SpellBladeHelper.setCooldowns(wand, newCooldowns);
+                    SpellBladeHelper.setCooldowns(copy, newCooldowns);
                 }
 
                 upgrade.shrink(1);
                 if(player != null){
                     WizardryAdvancementTriggers.special_upgrade.triggerFor(player);
-                    if(WandHelper.getTotalUpgrades(wand) == Tier.MASTER.upgradeLimit){
+                    if(WandHelper.getTotalUpgrades(copy) == Tier.MASTER.upgradeLimit){
                         WizardryAdvancementTriggers.max_out_wand.triggerFor(player);
                     }
                 }
             }
         }
 
-        return wand;
+        return copy;
     }
 
     public boolean onApplyButtonPressed(EntityPlayer player, Slot centre, Slot crystals, Slot upgrade, Slot[] spellBooks){
@@ -471,7 +489,7 @@ public class WizardryCore {
         return changed;
     }
 
-    public void onClearButtonPressed(EntityPlayer player, Slot centre, Slot crystals, Slot upgrade, Slot[] spellBooks){
+    public void onClearButtonPressed(Slot centre){
         ItemStack stack = centre.getStack();
         if (stack.getTagCompound() != null && stack.hasTagCompound() && stack.getTagCompound().getCompoundTag(SpellBladeHelper.WIZARDRY_DATA).hasKey(SpellBladeHelper.SPELL_ARRAY_KEY)) {
             NBTTagCompound nbt = stack.getTagCompound();
@@ -485,9 +503,5 @@ public class WizardryCore {
             nbt.getCompoundTag(SpellBladeHelper.WIZARDRY_DATA).setIntArray(SpellBladeHelper.SPELL_ARRAY_KEY, spells);
             stack.setTagCompound(nbt);
         }
-    }
-
-    public IManaStoringItem getManaStoringItem() {
-        return manaStoringItem;
     }
 }

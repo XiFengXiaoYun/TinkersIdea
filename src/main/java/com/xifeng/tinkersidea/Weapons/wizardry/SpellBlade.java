@@ -11,7 +11,6 @@ import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.item.IManaStoringItem;
 import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.item.IWorkbenchItem;
-import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.SpellModifiers;
 import mcp.MethodsReturnNonnullByDefault;
@@ -27,7 +26,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -36,7 +34,6 @@ import slimeknights.tconstruct.library.materials.*;
 import slimeknights.tconstruct.library.tinkering.Category;
 import slimeknights.tconstruct.library.tinkering.PartMaterialType;
 import slimeknights.tconstruct.library.tools.SwordCore;
-import slimeknights.tconstruct.library.utils.TinkerUtil;
 import slimeknights.tconstruct.library.utils.ToolHelper;
 import slimeknights.tconstruct.tools.TinkerTools;
 
@@ -57,14 +54,7 @@ public class SpellBlade extends SwordCore implements IWorkbenchItem, ISpellCasti
                 MagicMaterialType.magicFocus(WeaponAll.magicFocus));
         this.addCategory(Category.WEAPON, SpecialCategory.Wizardry);
         setTranslationKey("spellblade").setRegistryName("spellblade");
-        this.wizardryCore = new WizardryCore(this, Element.MAGIC, this);
-        this.addPropertyOverride(new ResourceLocation("pointing"),
-                (s, w, e) -> e != null && e.getActiveItemStack() == s
-                        && (s.getItemUseAction() == SpellActions.POINT
-                        || s.getItemUseAction() == SpellActions.POINT_UP
-                        || s.getItemUseAction() == SpellActions.POINT_DOWN
-                        || s.getItemUseAction() == SpellActions.GRAPPLE
-                        || s.getItemUseAction() == SpellActions.SUMMON) ? 1 : 0);
+        this.wizardryCore = new WizardryCore();
     }
 
     @Override
@@ -118,14 +108,13 @@ public class SpellBlade extends SwordCore implements IWorkbenchItem, ISpellCasti
     @Override
     public Multimap<String, AttributeModifier> getAttributeModifiers(@Nonnull EntityEquipmentSlot slot, ItemStack stack) {
         Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
-        //need to be changed
+
         double amount = calcSpellPotency(stack);
 
         if (slot == EntityEquipmentSlot.MAINHAND && !ToolHelper.isBroken(stack)) {
             multimap.put(Attribute.MAGIC.getName(), new AttributeModifier(uuid, "Magic_Potency", amount, 1));
         }
 
-        //TinkerUtil.getTraitsOrdered(stack).forEach((trait) -> trait.getAttributeModifiers(slot, stack, multimap));
         return multimap;
     }
 
@@ -135,8 +124,8 @@ public class SpellBlade extends SwordCore implements IWorkbenchItem, ISpellCasti
 
     @Override
     public void addMaterialTraits(NBTTagCompound root, List<Material> materials) {
-        ModifierMagic.INSTANCE.apply(root);
         super.addMaterialTraits(root, materials);
+        ModifierMagic.INSTANCE.apply(root);
     }
 
 //Magic part!
@@ -215,12 +204,13 @@ public class SpellBlade extends SwordCore implements IWorkbenchItem, ISpellCasti
     @Override
     public void onUpdate(@ParametersAreNonnullByDefault ItemStack stack, @ParametersAreNonnullByDefault World world, @ParametersAreNonnullByDefault Entity entity, int slot, boolean isHeldInMainhand){
         super.onUpdate(stack, world, entity, slot, isHeldInMainhand);
-        wizardryCore.onUpdate(stack, world, entity, slot, isHeldInMainhand);
+        wizardryCore.onUpdate(stack, world, entity, isHeldInMainhand);
     }
 
     @Override
     public boolean canContinueUsing(@ParametersAreNonnullByDefault ItemStack oldStack, @ParametersAreNonnullByDefault ItemStack newStack){
-        return wizardryCore.canContinueUsing(oldStack, newStack);
+        boolean b = super.canContinueUsing(oldStack, newStack);
+        return wizardryCore.canContinueUsing(oldStack, newStack) && b;
     }
 
     @Override
@@ -244,13 +234,37 @@ public class SpellBlade extends SwordCore implements IWorkbenchItem, ISpellCasti
     public void addInformation(@ParametersAreNonnullByDefault ItemStack stack, World world, @ParametersAreNonnullByDefault List<String> text, @ParametersAreNonnullByDefault net.minecraft.client.util.ITooltipFlag advanced){
         super.addInformation(stack, world, text, advanced);
         if(!Util.isCtrlKeyDown() && !Util.isShiftKeyDown()) {
-            wizardryCore.addInformation(stack, world, text, advanced);
+            wizardryCore.addInformation(stack, text, advanced);
         }
     }
 
     @Override
     public int getRGBDurabilityForDisplay(@ParametersAreNonnullByDefault ItemStack stack){
-        return DrawingUtils.mix(0xff8bfe, 0x8e2ee4, (float)getDurabilityForDisplay(stack));
+        Element element = wizardryCore.getElement(stack);
+        float percentage = (float) getDurabilityForDisplay(stack);
+        switch (element){
+            case MAGIC:
+                return getColor(0xff8bfe, 0x8e2ee4, percentage);
+            case ICE:
+                return getColor(0x8bdeff, 0x2ea4e4,  percentage);
+            case FIRE:
+                return getColor(0xfb6374, 0xdb161f, percentage);
+            case EARTH:
+                return getColor(0x4aff83, 0x27b920, percentage);
+            case HEALING:
+                return getColor(0xf5fe6e, 0xdfeb1e, percentage);
+            case SORCERY:
+                return getColor(0x37fda4, 0x06c971, percentage);
+            case LIGHTNING:
+                return getColor(0x18a1d8, 0x056d97, percentage);
+            case NECROMANCY:
+                return getColor(0xc103de, 0x731d80, percentage);
+        }
+        return getColor(0xff8bfe, 0x8e2ee4, percentage);
+    }
+
+    private static int getColor(int color1, int color2, float percentage) {
+        return DrawingUtils.mix(color1, color2, percentage);
     }
 
     @MethodsReturnNonnullByDefault
@@ -287,7 +301,7 @@ public class SpellBlade extends SwordCore implements IWorkbenchItem, ISpellCasti
 
     @Override
     public boolean itemInteractionForEntity(@ParametersAreNonnullByDefault ItemStack stack, @ParametersAreNonnullByDefault EntityPlayer player, @ParametersAreNonnullByDefault EntityLivingBase entity, @ParametersAreNonnullByDefault EnumHand hand){
-        return wizardryCore.itemInteractionForEntity(stack, player, entity, hand);
+        return wizardryCore.itemInteractionForEntity(player, entity);
     }
     // Workbench stuff
 
@@ -308,11 +322,10 @@ public class SpellBlade extends SwordCore implements IWorkbenchItem, ISpellCasti
 
     @Override
     public void onClearButtonPressed(EntityPlayer player, Slot centre, Slot crystals, Slot upgrade, Slot[] spellBooks){
-        wizardryCore.onClearButtonPressed(player, centre, crystals, upgrade, spellBooks);
+        wizardryCore.onClearButtonPressed(centre);
     }
 
     public void setElement(ItemStack stack, Element element){
         wizardryCore.setElement(stack, element);
-        SpellBladeHelper.setElement(stack, element.name());
     }
 }

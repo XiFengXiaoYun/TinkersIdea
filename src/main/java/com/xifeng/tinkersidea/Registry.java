@@ -19,7 +19,8 @@ public final class Registry {
     //register tools here
     @SubscribeEvent
     public static void registerTools(RegistryEvent.Register<Item> event) {
-        MagicMaterials.initMagicMaterials();
+        //if(TinkersIdea.enableWizardry()) MagicMaterials.initMagicMaterials();
+
         WeaponAll.initWeapon(event, tools);
     }
 

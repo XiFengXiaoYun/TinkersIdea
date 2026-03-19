@@ -1,9 +1,13 @@
 package com.xifeng.tinkersidea.modifiers.modifier;
 
+import com.xifeng.tinkersidea.Weapons.wizardry.MagicNBT;
 import com.xifeng.tinkersidea.Weapons.wizardry.SpecialCategory;
 import com.xifeng.tinkersidea.config.ModConfig;
+import com.xifeng.tinkersidea.util.TITagUtil;
 import net.minecraft.nbt.NBTTagCompound;
 import slimeknights.tconstruct.library.modifiers.ModifierAspect;
+import slimeknights.tconstruct.library.modifiers.ModifierNBT;
+import slimeknights.tconstruct.library.utils.TagUtil;
 import slimeknights.tconstruct.tools.modifiers.ToolModifier;
 
 public class ModifierMagic extends ToolModifier {
@@ -20,22 +24,15 @@ public class ModifierMagic extends ToolModifier {
 
     @Override
     public void applyEffect(NBTTagCompound root, NBTTagCompound modifierTag) {
-        syncWizardryData(root, modifierTag);
-    }
-
-    private static int getWandLevel(NBTTagCompound modifierTag) {
-        return modifierTag.getInteger("level");
-    }
-
-    private static void syncWizardryData(NBTTagCompound root, NBTTagCompound modifierTag) {
-        NBTTagCompound stats = root.getCompoundTag("Stats");
-        NBTTagCompound oldStats = root.getCompoundTag("StatsOriginal");
-        int oldMaxMana = oldStats.getInteger("maxMana");
-        float oldPotency = oldStats.getFloat("spellPotency");
-        int level = getWandLevel(modifierTag) - 1;
-        int maxMana = (int) ((level * ModConfig.manaCapacityIncrease + 1.0) * oldMaxMana);
-        float spellPotency = (float) ((level * ModConfig.spellPotencyIncrease + 1.0) * oldPotency);
-        stats.setInteger("maxMana", maxMana);
-        stats.setFloat("spellPotency", spellPotency);
+        int level = ModifierNBT.readInteger(modifierTag).level - 1;
+        if(level > 0){
+            MagicNBT nbt = TITagUtil.getMagicStats(root);
+            MagicNBT original = TITagUtil.getOriginalMagicStats(root);
+            int maxMana = original.maxMana;
+            float potency = original.spellPotency;
+            nbt.maxMana += (int) (maxMana * (ModConfig.manaCapacityIncrease * level));
+            nbt.spellPotency += (float) (potency * ModConfig.spellPotencyIncrease * level);
+            TagUtil.setToolTag(root, nbt.get());
+        }
     }
 }

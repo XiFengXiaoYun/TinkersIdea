@@ -5,7 +5,13 @@ import slimeknights.tconstruct.library.TinkerRegistry;
 import slimeknights.tconstruct.library.materials.Material;
 import slimeknights.tconstruct.tools.TinkerMaterials;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MagicMaterials {
+
+    public static final Map<Material, MagicMaterialStats> crtMaterials = new HashMap<Material, MagicMaterialStats>();
+
     public static void initMagicMaterials() {
         Material.UNKNOWN.addStats(new MagicMaterialStats(1.0f, 100));
         TinkerRegistry.addMaterialStats(TinkerMaterials.wood, new MagicMaterialStats(1.5f, 80));

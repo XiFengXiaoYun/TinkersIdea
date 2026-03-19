@@ -1,34 +1,28 @@
 package com.xifeng.tinkersidea.modifiers.modifier;
 
+import com.xifeng.tinkersidea.Weapons.wizardry.MagicNBT;
 import com.xifeng.tinkersidea.Weapons.wizardry.SpecialCategory;
-import net.minecraft.item.ItemStack;
+import com.xifeng.tinkersidea.util.TITagUtil;
 import net.minecraft.nbt.NBTTagCompound;
-import slimeknights.tconstruct.library.modifiers.ModifierAspect;
+import slimeknights.tconstruct.library.modifiers.ModifierNBT;
 import slimeknights.tconstruct.library.modifiers.ModifierTrait;
-import slimeknights.tconstruct.library.utils.TinkerUtil;
+import slimeknights.tconstruct.library.utils.TagUtil;
 
 public class ModifierMagicEnhance extends ModifierTrait {
 
     public ModifierMagicEnhance() {
         super("magic_enhance", 0xe4ea60, 3, 20);
-        this.addAspects(SpecialCategory.aspect, new ModifierAspect.FreeModifierAspect(0));
+        this.addAspects(SpecialCategory.aspect);
     }
 
-    public boolean canApplyCustom(ItemStack stack) {
-        //super.canApplyCustom(stack);
-        NBTTagCompound tag = TinkerUtil.getModifierTag(stack, ModifierMagic.INSTANCE.identifier);
-        int level = tag.getInteger("level");
-        return level >= 4;
-    }
 
     public void applyEffect(NBTTagCompound rootCompound, NBTTagCompound modifierTag) {
-        int amount = getModifierLevel(modifierTag);
-        NBTTagCompound stats = rootCompound.getCompoundTag("Stats");
-        float spellPotency = stats.getFloat("spellPotency");
-        stats.setFloat("spellPotency", spellPotency * (amount * 0.01f + 1.0f ));
+        ModifierNBT.IntegerNBT nbt = ModifierNBT.readInteger(modifierTag);
+        int current = nbt.current;
+        MagicNBT data = TITagUtil.getMagicStats(rootCompound);
+        MagicNBT oldData = TITagUtil.getOriginalMagicStats(rootCompound);
+        data.spellPotency += (float) (oldData.spellPotency * current * 0.01);
+        TagUtil.setToolTag(rootCompound, data.get());
     }
 
-    private static int getModifierLevel(NBTTagCompound mod) {
-        return mod.getInteger("current");
-    }
 }

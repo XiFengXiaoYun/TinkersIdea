@@ -20,21 +20,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import slimeknights.tconstruct.library.utils.TagUtil;
 
 import javax.annotation.Nullable;
 
-public class WizardryUtil {
+public final class WizardryUtil {
     public static final int BASE_SPELL_SLOTS = 5;
-    /** The number of ticks between each time a continuous spell is added to the player's recently-cast spells. */
     public static final int CONTINUOUS_TRACKING_INTERVAL = 20;
-    /** The increase in progression for casting spells of the matching element. */
     public static final float ELEMENTAL_PROGRESSION_MODIFIER = 1.5f;
-    /** The increase in progression for casting an undiscovered spell (can only happen once per spell for each player). */
     public static final float DISCOVERY_PROGRESSION_MODIFIER = 5f;
-    /** The increase in progression for tiers that the player has already reached. */
     public static final float SECOND_TIME_PROGRESSION_MODIFIER = 1.5f;
-    /** The fraction of progression lost when all recently-cast spells are the same as the one being cast. */
     public static final float MAX_PROGRESSION_REDUCTION = 0.75f;
 
     public static int getDistributedCost(int cost, int castingTick){
@@ -122,8 +116,29 @@ public class WizardryUtil {
     }
 
     public static int getMaxMana(ItemStack stack) {
-        MagicNBT nbt =  new MagicNBT(TagUtil.getToolTag(stack));
-        return nbt.maxMana;
+        /*NBTTagCompound tag = SpellBladeHelper.getWizardryData(stack);
+        if(tag.hasKey("maxMana")) return tag.getInteger("maxMana");
+        NBTTagCompound stats;
+        if (stack.getTagCompound() != null) {
+            stats = stack.getTagCompound().getCompoundTag("Stats");
+            tag.setInteger("maxMana", stats.getInteger("maxMana"));
+        }
+        return tag.getInteger("maxMana");
+
+         */
+        NBTTagCompound tag = new NBTTagCompound();
+        if (stack.getTagCompound() != null) {
+            tag = stack.getTagCompound().getCompoundTag("Stats");
+        }
+        return tag.getInteger("maxMana");
+    }
+
+    public static int getBaseMaxMana(ItemStack stack) {
+        if (stack.getTagCompound() != null) {
+            NBTTagCompound tag = stack.getTagCompound().getCompoundTag("StatsOriginal");
+            if (tag.hasKey("maxMana")) return tag.getInteger("maxMana");
+        }
+        return 0;
     }
 
     public static float getSpellPotency(ItemStack stack) {
@@ -143,9 +158,8 @@ public class WizardryUtil {
     }
 
     public static void setMaxMana(ItemStack stack, int maxMana) {
-        MagicNBT nbt = new MagicNBT(TagUtil.getToolTag(stack));
-        nbt.maxMana = maxMana;
-        TagUtil.setToolTag(stack, nbt.get());
+        NBTTagCompound tag = SpellBladeHelper.getWizardryData(stack);
+        tag.setInteger("maxMana", maxMana);
     }
 
     public static void consumeMana(ItemStack stack, int mana, @Nullable EntityLivingBase wielder) {
