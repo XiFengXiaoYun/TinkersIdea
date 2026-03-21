@@ -1,10 +1,7 @@
 package com.xifeng.tinkersidea.client;
 
 import com.xifeng.tinkersidea.common.CommonProxy;
-import com.xifeng.tinkersidea.TinkersIdea;
-import com.xifeng.tinkersidea.Weapons.ModWeapon;
 import com.xifeng.tinkersidea.Weapons.WeaponAll;
-import com.xifeng.tinkersidea.client.book.BookTransformerMaterials;
 import com.xifeng.tinkersidea.client.book.BookTransformerModifiers;
 import com.xifeng.tinkersidea.client.book.BookTransformerWeapons;
 import net.minecraft.item.Item;
@@ -27,15 +24,6 @@ public class ClientProxy extends CommonProxy {
             info.addSlotPosition( 11, 42); //guard
             TinkerRegistryClient.addToolBuilding(info);
         }
-        if(TinkersIdea.enableWizardry()) {
-            if(ModWeapon.spellBlade != null) {
-                ToolBuildGuiInfo info = new ToolBuildGuiInfo(ModWeapon.spellBlade);
-                info.addSlotPosition(12, 62);
-                info.addSlotPosition(48, 26);
-                info.addSlotPosition(30, 44);
-                TinkerRegistryClient.addToolBuilding(info);
-            }
-        }
     }
 
     @Override
@@ -47,9 +35,6 @@ public class ClientProxy extends CommonProxy {
     public void postInit() {
         TinkerBook.INSTANCE.addTransformer(new BookTransformerWeapons(new FileRepository("tconstruct:book")));
         TinkerBook.INSTANCE.addTransformer(new BookTransformerModifiers(new FileRepository("tconstruct:book")));
-        if(TinkersIdea.enableWizardry()) {
-            TinkerBook.INSTANCE.addTransformer(new BookTransformerMaterials());
-        }
     }
 
     @Override

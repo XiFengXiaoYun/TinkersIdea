@@ -1,21 +1,5 @@
 item.greatsword.name=Great Sword
 item.greatsword.desc=Wide-area sweeping attack with high damage, slow attack speed, requires two-handed swinging, and performs excellently against large groups of enemies. Let's defend against the zombie invasion!
-item.spellblade.name=Spell Blade
-item.spellblade.desc=Melee attacks can deal magical damage, and right-clicking can also cast spells.
-
-item.magic_focus.name=Magic Core
-stat.magic_focus.name=Magic
-attribute.name.ti.magicPotency=Magic Potency
-stat.spellblade.spellPotency.name=Spell Potency
-stat.spellblade.maxMana.name=Mana Capacity
-stat.spellblade.spellPotency.desc=It can increase the damage dealt by spells
-stat.spellblade.maxMana.desc=Determines the final magic capacity
 
 modifier.sweep_edge.name=Sweep Edge
 modifier.sweep_edge.desc=§oSweep all before one!§r\nEnhance the power of sweeping attacks
-modifier.magic_data.name=Magic
-modifier.magic_data.desc=§oCrafted with Excellence...§r\nAfter upgrading with the Arcane Tome, the magical performance of this weapon can be enhanced
-modifier.magic_enhance.name=Magic Enhance
-modifier.magic_enhance.desc=§oThe power of magic§r\n Increase the spell potency of the weapon
-modifier.magic_upgrade.name=Magic Expansion
-modifier.magic_upgrade.desc=§oThe power of magic§r\n Increase the mana capacity of the weapon

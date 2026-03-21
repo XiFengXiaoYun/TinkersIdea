@@ -19,7 +19,6 @@ public final class Registry {
     @SubscribeEvent
     public static void registerTools(RegistryEvent.Register<Item> event) {
         WeaponRegister.registerWeapon(event, tools);
-        WeaponRegister.registerModWeapon(event, tools, TinkersIdea.enableWizardry());
     }
 
     public static void initForgeTool(ToolCore core, RegistryEvent.Register<Item> event) {
