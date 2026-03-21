@@ -1,5 +1,6 @@
-package com.xifeng.tinkersidea;
+package com.xifeng.tinkersidea.event;
 
+import com.xifeng.tinkersidea.Tags;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.IAttribute;

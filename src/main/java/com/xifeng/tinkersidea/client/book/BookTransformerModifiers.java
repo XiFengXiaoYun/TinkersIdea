@@ -1,6 +1,6 @@
 package com.xifeng.tinkersidea.client.book;
 
-import com.xifeng.tinkersidea.modifiers.ModifierRegister;
+import com.xifeng.tinkersidea.modifiers.registry.ModifierRegister;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import slimeknights.mantle.client.book.data.BookData;

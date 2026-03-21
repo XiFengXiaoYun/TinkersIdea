@@ -1,4 +1,4 @@
-package com.xifeng.tinkersidea;
+package com.xifeng.tinkersidea.common;
 
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;

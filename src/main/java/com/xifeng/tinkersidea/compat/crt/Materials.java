@@ -2,6 +2,7 @@ package com.xifeng.tinkersidea.compat.crt;
 
 import com.xifeng.tinkersidea.Weapons.wizardry.MagicMaterialStats;
 import com.xifeng.tinkersidea.materials.MagicMaterials;
+import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.mc1120.CraftTweaker;
 import slimeknights.tconstruct.library.TinkerRegistry;
@@ -11,6 +12,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
 
 @ZenClass("mods.tinkersidea.Materials")
 @ZenRegister
+@ModOnly("ebwizardry")
 public class Materials {
 
     @ZenMethod

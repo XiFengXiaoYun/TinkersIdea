@@ -1,8 +1,7 @@
 package com.xifeng.tinkersidea;
 
 import com.google.common.collect.ImmutableSet;
-import com.xifeng.tinkersidea.Weapons.WeaponAll;
-import com.xifeng.tinkersidea.materials.MagicMaterials;
+import com.xifeng.tinkersidea.Weapons.WeaponRegister;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -15,13 +14,12 @@ import java.util.Set;
 
 @Mod.EventBusSubscriber(modid = Tags.MOD_ID)
 public final class Registry {
-    public static final Set<ToolCore> tools = new HashSet<>();
+    private static final Set<ToolCore> tools = new HashSet<>();
     //register tools here
     @SubscribeEvent
     public static void registerTools(RegistryEvent.Register<Item> event) {
-        //if(TinkersIdea.enableWizardry()) MagicMaterials.initMagicMaterials();
-
-        WeaponAll.initWeapon(event, tools);
+        WeaponRegister.registerWeapon(event, tools);
+        WeaponRegister.registerModWeapon(event, tools, TinkersIdea.enableWizardry());
     }
 
     public static void initForgeTool(ToolCore core, RegistryEvent.Register<Item> event) {

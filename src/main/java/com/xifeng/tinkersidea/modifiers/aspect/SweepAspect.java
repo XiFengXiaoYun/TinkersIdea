@@ -1,6 +1,6 @@
-package com.xifeng.tinkersidea.modifiers;
+package com.xifeng.tinkersidea.modifiers.aspect;
 
-import com.xifeng.tinkersidea.Weapons.GreatSword;
+import com.xifeng.tinkersidea.Weapons.common.GreatSword;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import slimeknights.tconstruct.library.modifiers.ModifierAspect;

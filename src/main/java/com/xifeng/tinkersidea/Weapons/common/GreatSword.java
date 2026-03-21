@@ -1,4 +1,4 @@
-package com.xifeng.tinkersidea.Weapons;
+package com.xifeng.tinkersidea.Weapons.common;
 
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;

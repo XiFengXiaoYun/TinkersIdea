@@ -1,6 +1,6 @@
 package com.xifeng.tinkersidea.modifiers.modifier;
 
-import com.xifeng.tinkersidea.modifiers.SweepAspect;
+import com.xifeng.tinkersidea.modifiers.aspect.SweepAspect;
 import net.minecraft.init.Enchantments;
 import net.minecraft.nbt.NBTTagCompound;
 import slimeknights.tconstruct.library.modifiers.ModifierTrait;

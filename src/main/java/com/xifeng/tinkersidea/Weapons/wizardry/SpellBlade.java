@@ -1,8 +1,8 @@
 package com.xifeng.tinkersidea.Weapons.wizardry;
 
 import com.google.common.collect.Multimap;
-import com.xifeng.tinkersidea.Attribute;
-import com.xifeng.tinkersidea.Weapons.WeaponAll;
+import com.xifeng.tinkersidea.event.Attribute;
+import com.xifeng.tinkersidea.Weapons.ModWeapon;
 import com.xifeng.tinkersidea.modifiers.modifier.ModifierMagic;
 import com.xifeng.tinkersidea.parts.MagicMaterialType;
 import com.xifeng.tinkersidea.util.WizardryUtil;
@@ -51,7 +51,7 @@ public class SpellBlade extends SwordCore implements IWorkbenchItem, ISpellCasti
     public SpellBlade() {
         super(PartMaterialType.handle(TinkerTools.toolRod),
                 PartMaterialType.head(TinkerTools.knifeBlade),
-                MagicMaterialType.magicFocus(WeaponAll.magicFocus));
+                MagicMaterialType.magicFocus(ModWeapon.magicFocus));
         this.addCategory(Category.WEAPON, SpecialCategory.Wizardry);
         setTranslationKey("spellblade").setRegistryName("spellblade");
         this.wizardryCore = new WizardryCore();
