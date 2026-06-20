@@ -1,9 +1,9 @@
 item.greatsword.name=大剑
 item.greatsword.desc=大范围横扫攻击，伤害较高，攻速较慢，需要两只手挥动，在面对一大群敌人时表现出色。快去抵御僵尸入侵吧！
+item.magic_plate.name=魔抗强化大板
 
 modifier.sweep_edge.name=横扫之刃
 modifier.sweep_edge.desc=§o横扫千军！§r\n提高横扫攻击的威力与范围
 modifier.luck_armor.name=幸运
 modifier.luck_armor.desc=§o送你一朵三叶草！§r\n提供幸运值。
 modifier.magic_shield_armor.name=魔法保护
-modifier.magic_shield_armor.desc=§o我什么也不缺了！§r\n提供对魔法伤害的保护。

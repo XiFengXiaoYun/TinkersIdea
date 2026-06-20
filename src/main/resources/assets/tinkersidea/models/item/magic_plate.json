@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "tinkersidea:item/magic_plate"
+  }
+}

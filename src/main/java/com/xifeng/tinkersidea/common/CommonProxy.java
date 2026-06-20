@@ -18,6 +18,9 @@ public class CommonProxy {
 
     }
 
+    public void registerItemModel(Item item) {
+    }
+
     public <T extends Item & IToolPart> void registerToolPartModel(T part) {
     }
 

@@ -15,7 +15,7 @@ import slimeknights.tconstruct.library.utils.TinkerUtil;
 public class ModMagicShield extends ArmorModifierTrait {
 
     public ModMagicShield() {
-        super("magic_shield", 0x75FA8D, 4, 1);
+        super("magic_shield", 0x7e22ab, 4, 1);
         this.aspects.clear();
         this.addAspects(new ModifierAspect.LevelAspect(this, 4), new ModifierAspect.FreeFirstModifierAspect(this, 1), new ModifierAspect.DataAspect(this));
     }

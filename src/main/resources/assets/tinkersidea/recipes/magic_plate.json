@@ -1,0 +1,25 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "OMO",
+    "MKM",
+    "OMO"
+  ],
+  "key": {
+    "O": {
+      "type": "forge:ore_dict",
+      "ore": "obsidian"
+    },
+    "M": {
+      "type": "forge:ore_dict",
+      "ore": "ingotManyullyn"
+    },
+    "K": {
+      "type": "forge:ore_dict",
+      "ore": "cast"
+    }
+  },
+  "result": {
+    "item": "tinkersidea:magic_plate"
+  }
+}

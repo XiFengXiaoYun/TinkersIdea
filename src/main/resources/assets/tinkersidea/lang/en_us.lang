@@ -1,5 +1,6 @@
 item.greatsword.name=Great Sword
 item.greatsword.desc=Wide-area sweeping attack with high damage, slow attack speed, requires two-handed swinging, and performs excellently against large groups of enemies. Let's defend against the zombie invasion!
+item.magic_plate.name=Magic Resistant Plate
 
 modifier.sweep_edge.name=Sweep Edge
 modifier.sweep_edge.desc=§oSweep all before one!§r\nEnhance the power of sweeping attacks

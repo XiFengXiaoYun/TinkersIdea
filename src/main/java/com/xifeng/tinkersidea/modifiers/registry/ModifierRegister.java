@@ -1,6 +1,7 @@
 package com.xifeng.tinkersidea.modifiers.registry;
 
 import c4.conarm.lib.utils.RecipeMatchHolder;
+import com.xifeng.tinkersidea.items.ItemRegistry;
 import com.xifeng.tinkersidea.modifiers.modifier.conarm.ModMagicShield;
 import com.xifeng.tinkersidea.modifiers.modifier.conarm.ModifierLuck;
 import com.xifeng.tinkersidea.modifiers.modifier.tcon.ModifierSweepEdge;
@@ -29,7 +30,7 @@ public class ModifierRegister {
     public static void initArmorMod() {
         RecipeMatchHolder.addItem(modifierLuck, Blocks.LAPIS_BLOCK, 1);
         armorModifierTraits.add(modifierLuck);
-        RecipeMatchHolder.addItem(modMagicShield, Items.IRON_INGOT);
+        RecipeMatchHolder.addItem(modMagicShield, ItemRegistry.magicPlate);
         armorModifierTraits.add(modMagicShield);
     }
 
