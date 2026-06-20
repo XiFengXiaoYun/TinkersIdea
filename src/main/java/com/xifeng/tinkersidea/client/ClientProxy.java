@@ -1,9 +1,11 @@
 package com.xifeng.tinkersidea.client;
 
+import c4.conarm.lib.book.ArmoryBook;
 import com.xifeng.tinkersidea.common.CommonProxy;
 import com.xifeng.tinkersidea.Weapons.WeaponAll;
 import com.xifeng.tinkersidea.client.book.BookTransformerModifiers;
 import com.xifeng.tinkersidea.client.book.BookTransformerWeapons;
+import com.xifeng.tinkersidea.modifiers.registry.ModifierRegister;
 import net.minecraft.item.Item;
 import slimeknights.mantle.client.book.repository.FileRepository;
 import slimeknights.tconstruct.common.ModelRegisterUtil;
@@ -34,7 +36,8 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void postInit() {
         TinkerBook.INSTANCE.addTransformer(new BookTransformerWeapons(new FileRepository("tconstruct:book")));
-        TinkerBook.INSTANCE.addTransformer(new BookTransformerModifiers(new FileRepository("tconstruct:book")));
+        TinkerBook.INSTANCE.addTransformer(new BookTransformerModifiers(new FileRepository("tconstruct:book"), false, ModifierRegister.modifierTraits));
+        ArmoryBook.INSTANCE.addTransformer(new BookTransformerModifiers(new FileRepository("conarm:book"), true, ModifierRegister.armorModifierTraits));
     }
 
     @Override

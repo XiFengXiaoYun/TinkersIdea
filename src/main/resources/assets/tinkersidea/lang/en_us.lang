@@ -3,3 +3,7 @@ item.greatsword.desc=Wide-area sweeping attack with high damage, slow attack spe
 
 modifier.sweep_edge.name=Sweep Edge
 modifier.sweep_edge.desc=§oSweep all before one!§r\nEnhance the power of sweeping attacks
+modifier.luck_armor.name=Luck
+modifier.luck_armor.desc=§oGive you a clover!§r\nProvides luck.
+modifier.magic_shield_armor.name=Magic Shield
+modifier.magic_shield_armor.desc=§oI lack nothing!§r\nOffers protection against magical damage.

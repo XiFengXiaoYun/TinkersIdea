@@ -1,0 +1,19 @@
+{
+  "armormodifier": "magic_shield_armor",
+  "text": [
+    {
+      "text": "使用金属制品可以抵消魔法造成的伤害。"
+    }
+  ],
+  "effects": [
+    "只消耗一个强化槽",
+    "多个等级",
+    "与其他保护冲突"
+  ],
+  "demoArmor": [
+    "conarm:helmet",
+    "conarm:chestplate",
+    "conarm:leggings",
+    "conarm:boots"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "armormodifier": "magic_shield_armor",
+  "text": [
+    {
+      "text": "Using metal products can offset the damage caused by magic."
+    }
+  ],
+  "effects": [
+    "Requires only 1 modifier",
+    "Multiple levels",
+    "Not compatible with other resists"
+  ],
+  "demoArmor": [
+    "conarm:helmet"
+  ]
+}

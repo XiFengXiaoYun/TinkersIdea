@@ -1,0 +1,15 @@
+{
+  "armormodifier": "luck_armor",
+  "text": [
+    {
+      "text": "Perhaps lapis can bring good luck?"
+    }
+  ],
+  "effects": [
+    "Single use",
+    "Good luck!"
+  ],
+  "demoArmor": [
+    "conarm:helmet"
+  ]
+}

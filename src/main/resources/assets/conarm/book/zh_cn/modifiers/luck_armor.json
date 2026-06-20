@@ -1,0 +1,15 @@
+{
+  "armormodifier": "luck_armor",
+  "text": [
+    {
+      "text": "也许青金石可以带来好运？"
+    }
+  ],
+  "effects": [
+    "只能强化一次",
+    "带来幸运"
+  ],
+  "demoArmor": [
+    "conarm:helmet"
+  ]
+}

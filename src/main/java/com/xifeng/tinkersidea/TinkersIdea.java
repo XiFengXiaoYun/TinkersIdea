@@ -1,4 +1,5 @@
 package com.xifeng.tinkersidea;
+
 import com.xifeng.tinkersidea.common.CommonProxy;
 import com.xifeng.tinkersidea.modifiers.registry.ModifierRegister;
 import net.minecraftforge.fml.common.Mod;
@@ -26,7 +27,7 @@ public class TinkersIdea {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         proxy.initToolGuis();
-
+        ModifierRegister.initArmorMod();
     }
 
     @Mod.EventHandler
