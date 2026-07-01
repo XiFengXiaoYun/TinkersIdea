@@ -1,0 +1,7 @@
+[
+  {
+    "name": "greatsword",
+    "type": "tool",
+    "data": "tools/greatsword.json"
+  }
+]

@@ -1,0 +1,10 @@
+[
+  {
+    "type": "armormodifier",
+    "data": "modifiers/luck_armor.json"
+  },
+  {
+    "type": "armormodifier",
+    "data": "modifiers/magic_shield_armor.json"
+  }
+]
