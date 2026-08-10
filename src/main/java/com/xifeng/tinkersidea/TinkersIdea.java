@@ -1,7 +1,10 @@
 package com.xifeng.tinkersidea;
 
 import com.xifeng.tinkersidea.common.CommonProxy;
+import com.xifeng.tinkersidea.config.ModConfig;
+import com.xifeng.tinkersidea.event.EventHandler;
 import com.xifeng.tinkersidea.modifiers.registry.ModifierRegister;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -22,6 +25,9 @@ public class TinkersIdea {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         ModifierRegister.initModifiers();
+        if(ModConfig.General.enableTweaks) {
+            MinecraftForge.EVENT_BUS.register(EventHandler.class);
+        }
     }
 
     @Mod.EventHandler

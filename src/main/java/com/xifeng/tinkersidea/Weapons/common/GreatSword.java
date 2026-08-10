@@ -1,5 +1,6 @@
 package com.xifeng.tinkersidea.Weapons.common;
 
+import com.xifeng.tinkersidea.Weapons.WeaponAll;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,10 +29,8 @@ import java.util.List;
 public class GreatSword extends SwordCore {
     public GreatSword() {
         super(PartMaterialType.handle(TinkerTools.toughToolRod),
-                PartMaterialType.head(TinkerTools.swordBlade),
-                PartMaterialType.head(TinkerTools.swordBlade),
+                PartMaterialType.head(WeaponAll.longBlade),
                 PartMaterialType.extra(TinkerTools.wideGuard));
-                //PartMaterialType.extra(TinkerTools.wideGuard));
         this.addCategory(Category.WEAPON);
 
         setTranslationKey("greatsword").setRegistryName("greatsword");
@@ -56,7 +55,7 @@ public class GreatSword extends SwordCore {
 
     @Override
     public int[] getRepairParts() {
-        return new int[]{1, 2};
+        return new int[]{1};
     }
 
     //Copy from tconstruct
@@ -96,12 +95,11 @@ public class GreatSword extends SwordCore {
     @Override
     protected ToolNBT buildTagData(List<Material> list) {
         HandleMaterialStats handle = list.get(0).getStatsOrUnknown(MaterialTypes.HANDLE);
-        HeadMaterialStats head0 = list.get(1).getStatsOrUnknown(MaterialTypes.HEAD);
-        HeadMaterialStats head1 = list.get(2).getStatsOrUnknown(MaterialTypes.HEAD);
-        ExtraMaterialStats binding = list.get(3).getStatsOrUnknown(MaterialTypes.EXTRA);
+        HeadMaterialStats head = list.get(1).getStatsOrUnknown(MaterialTypes.HEAD);
+        ExtraMaterialStats binding = list.get(2).getStatsOrUnknown(MaterialTypes.EXTRA);
 
         ToolNBT data = new ToolNBT();
-        data.head(head0, head1);
+        data.head(head);
         data.extra(binding);
         data.handle(handle);
 

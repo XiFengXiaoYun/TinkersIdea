@@ -1,9 +1,8 @@
 {
   "textures": {
     "layer0": "tinkersidea:item/greatsword/handle",
-    "layer1": "tinkersidea:item/greatsword/blade1",
-    "layer2": "tinkersidea:item/greatsword/blade2",
-    "layer3": "tinkersidea:item/greatsword/guard",
+    "layer1": "tinkersidea:item/greatsword/blade",
+    "layer2": "tinkersidea:item/greatsword/guard",
     "broken1": "tinkersidea:item/greatsword/blade_broken"
   },
   "display": {

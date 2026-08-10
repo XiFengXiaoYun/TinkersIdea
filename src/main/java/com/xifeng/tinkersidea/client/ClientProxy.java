@@ -20,10 +20,9 @@ public class ClientProxy extends CommonProxy {
     public void initToolGuis() {
         if(WeaponAll.greatSword != null) {
             ToolBuildGuiInfo info = new ToolBuildGuiInfo(WeaponAll.greatSword);
-            info.addSlotPosition(33 - 10 - 14 - 1, 42 + 10 + 10 + 1); // handle
-            info.addSlotPosition(33 - 8 + 8, 42 - 10 + 2); // head
-            info.addSlotPosition(33 + 14 + 6, 42 - 8 - 8); // head 2
-            info.addSlotPosition( 11, 42); //guard
+            info.addSlotPosition(12, 62);
+            info.addSlotPosition(48, 26);
+            info.addSlotPosition(30, 44);
             TinkerRegistryClient.addToolBuilding(info);
         }
     }
