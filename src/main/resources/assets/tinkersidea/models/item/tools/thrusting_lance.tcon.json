@@ -1,0 +1,30 @@
+{
+  "textures": {
+    "layer0": "tinkersidea:item/thrusting_lance/handle2",
+    "layer1": "tinkersidea:item/thrusting_lance/head",
+    "layer2": "tinkersidea:item/thrusting_lance/handle1",
+    "broken1": "tinkersidea:item/thrusting_lance/head_broken"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [ 0, -90, 55 ],
+      "translation": [ 0, 10.0, 0.5 ],
+      "scale": [ 2.0, 2.0, 2.0 ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [ 0, 90, -55 ],
+      "translation": [ 0, 10.0, 0.5 ],
+      "scale": [ 1.5, 1.5, 1.5 ]
+    },
+    "firstperson_righthand": {
+      "rotation": [ 0, -95, 110 ],
+      "translation": [ 2.13, 3.0, 0.13 ],
+      "scale": [ 1.5, 1.5, 1.5 ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [ 0, 95, -30 ],
+      "translation": [ 2.13, 6.0, 0.13 ],
+      "scale": [ 1.5, 1.5, 1.5 ]
+    }
+  }
+}

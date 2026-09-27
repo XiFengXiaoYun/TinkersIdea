@@ -1,6 +1,8 @@
 item.long_blade.name=长剑刃
 item.greatsword.name=大剑
 item.greatsword.desc=大范围横扫攻击，伤害较高，攻速较慢，需要两只手挥动，在面对一大群敌人时表现出色。快去抵御僵尸入侵吧！
+item.thrusting_lance.name=突刺长枪
+item.thrusting_lance.desc=长距离攻击，小范围横扫，右键可投掷。
 item.magic_plate.name=魔抗强化大板
 
 modifier.sweep_edge.name=横扫之刃
@@ -9,3 +11,31 @@ modifier.luck_armor.name=幸运
 modifier.luck_armor.desc=§o送你一朵三叶草！§r\n提供幸运值。
 modifier.magic_shield_armor.name=魔法保护
 modifier.magic_shield_armor.desc=§o我现在什么也不缺了！§r\n提供对魔法伤害的保护。
+
+tooltips.level.exp=经验: %s/%s
+tooltips.level.level=等级: %s
+tooltips.level.0=§f纯新
+tooltips.level.1=§f新手
+tooltips.level.2=§f新手I
+tooltips.level.3=§f新手II
+tooltips.level.4=§f新手III
+tooltips.level.5=§f新手IV
+tooltips.level.6=§a娴熟
+tooltips.level.7=§a娴熟I
+tooltips.level.8=§a娴熟II
+tooltips.level.9=§a娴熟III
+tooltips.level.10=§a娴熟IV
+tooltips.level.11=§9大师
+tooltips.level.12=§9大师I
+tooltips.level.13=§9大师II
+tooltips.level.14=§9大师III
+tooltips.level.15=§9大师IV
+tooltips.level.16=§6神匠
+tooltips.level.17=§6神匠I
+tooltips.level.18=§6神匠II
+tooltips.level.19=§6神匠III
+tooltips.level.20=§6神匠IV
+
+tooltips.level.99=§4传奇
+
+message.levelup=你的%s升到了%s级！

@@ -19,6 +19,7 @@ public class ModifierLuck extends ArmorModifierTrait {
 
     public ModifierLuck() {
         super("luck", 0x75FA8D);
+        this.aspects.clear();
         this.addAspects(new ModifierAspect.SingleAspect(this), new ModifierAspect.DataAspect(this), ModifierAspect.freeModifier);
     }
 

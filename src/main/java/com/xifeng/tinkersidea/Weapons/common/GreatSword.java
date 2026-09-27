@@ -1,6 +1,7 @@
 package com.xifeng.tinkersidea.Weapons.common;
 
 import com.xifeng.tinkersidea.Weapons.WeaponAll;
+import com.xifeng.tinkersidea.util.DamageUtil;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -76,11 +77,13 @@ public class GreatSword extends SwordCore {
             }
             boolean flag2 = player.fallDistance > 0.0F && !player.onGround && !player.isOnLadder() && !player.isInWater() && !player.isPotionActive(MobEffects.BLINDNESS) && !player.isRiding();
             if(flag && !player.isSprinting() && !flag2 && player.onGround && d0 < (double) player.getAIMoveSpeed()) {
-                for(EntityLivingBase entitylivingbase : player.getEntityWorld().getEntitiesWithinAABB(EntityLivingBase.class, entity.getEntityBoundingBox().grow(3.5 + 0.5 * sweepLevel))) {
+                for(EntityLivingBase entitylivingbase : DamageUtil.getEntitiesInRange(entity, player.getEntityWorld(), 1.0 + sweepLevel * 0.5)) {
+
                     if(entitylivingbase != player && entitylivingbase != entity && !player.isOnSameTeam(entitylivingbase) && player.getDistanceSq(entitylivingbase) <= reach) {
                         entitylivingbase.knockBack(player, 0.75F, MathHelper.sin(player.rotationYaw * 0.017453292F), -MathHelper.cos(player.rotationYaw * 0.017453292F));
                         super.dealDamage(stack, player, entitylivingbase, damage * (0.25f + 0.25f * sweepLevel));
                     }
+
                 }
 
                 player.getEntityWorld().playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, player.getSoundCategory(), 2.0F, 0.875F);

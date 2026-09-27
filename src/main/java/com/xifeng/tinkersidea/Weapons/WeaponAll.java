@@ -3,6 +3,7 @@ package com.xifeng.tinkersidea.Weapons;
 import com.xifeng.tinkersidea.Registry;
 import com.xifeng.tinkersidea.TinkersIdea;
 import com.xifeng.tinkersidea.Weapons.common.GreatSword;
+import com.xifeng.tinkersidea.Weapons.common.ThrustingLance;
 import com.xifeng.tinkersidea.config.ModConfig;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -14,6 +15,7 @@ import slimeknights.tconstruct.tools.TinkerTools;
 
 public class WeaponAll {
     public static GreatSword greatSword;
+    public static ThrustingLance lance;
     public static ToolPart longBlade;
 
     public static void initWeapon(RegistryEvent.Register<Item> event) {
@@ -28,5 +30,8 @@ public class WeaponAll {
 
         greatSword = new GreatSword();
         Registry.initForgeTool(greatSword, event);
+        lance = new ThrustingLance();
+        Registry.initForgeTool(lance, event);
+
     }
 }

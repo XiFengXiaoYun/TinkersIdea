@@ -10,7 +10,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import slimeknights.tconstruct.library.TinkerRegistry;
 
-public class ModifierRegister {
+public final class ModifierRegister {
 
     private static final ModifierSweepEdge sweepEdge = new ModifierSweepEdge();
     private static final ModifierLuck modifierLuck = new ModifierLuck();
@@ -26,5 +26,4 @@ public class ModifierRegister {
         RecipeMatchHolder.addItem(modifierLuck, Blocks.LAPIS_BLOCK, 1);
         RecipeMatchHolder.addItem(modMagicShield, ItemRegistry.magicPlate);
     }
-
 }

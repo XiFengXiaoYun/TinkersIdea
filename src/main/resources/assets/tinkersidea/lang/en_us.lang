@@ -1,6 +1,8 @@
 item.long_blade.name=Long Blade
 item.greatsword.name=Great Sword
 item.greatsword.desc=Wide-area sweeping attack with high damage, slow attack speed, requires two-handed swinging, and performs excellently against large groups of enemies. Let's defend against the zombie invasion!
+item.thrusting_lance.name=Thrusting Lance
+item.thrusting_lance.desc=Long-range attack, small-scale sweeping, and can be thrown with the right click.
 item.magic_plate.name=Magic Resistant Plate
 
 modifier.sweep_edge.name=Sweep Edge
@@ -9,3 +11,31 @@ modifier.luck_armor.name=Luck
 modifier.luck_armor.desc=§oGive you a clover!§r\nProvides luck.
 modifier.magic_shield_armor.name=Magic Shield
 modifier.magic_shield_armor.desc=§oI lack nothing!§r\nOffers protection against magical damage.
+
+tooltips.level.exp=Exp: %s/%s
+tooltips.level.level=Level: %s
+tooltips.level.0=纯新
+tooltips.level.1=新手
+tooltips.level.2=新手I
+tooltips.level.3=新手II
+tooltips.level.4=新手III
+tooltips.level.5=新手IV
+tooltips.level.6=娴熟
+tooltips.level.7=娴熟I
+tooltips.level.8=娴熟II
+tooltips.level.9=娴熟III
+tooltips.level.10=娴熟IV
+tooltips.level.11=大师
+tooltips.level.12=大师I
+tooltips.level.13=大师II
+tooltips.level.14=大师III
+tooltips.level.15=大师IV
+tooltips.level.16=神匠
+tooltips.level.17=神匠I
+tooltips.level.18=神匠II
+tooltips.level.19=神匠III
+tooltips.level.20=神匠IV
+
+tooltips.level.99=§4传奇
+
+message.levelup=Your %s has advanced to level %s！

@@ -27,4 +27,12 @@ public class CommonProxy {
     public void registerModifierModel(IModifier mod, ResourceLocation rl) {
     }
 
+    public void registerAnimation() {
+
+    }
+
+    public void initNetwork() {
+
+    }
+
 }

@@ -49,7 +49,6 @@ public class EventHandler {
     }
 
     private static boolean canDisableShield(ItemStack weapon, EntityLivingBase attacker) {
-        if(weapon == null || weapon.isEmpty()) return false;
         return canEntityDisableShield(attacker) || canWeaponDisableShield(weapon);
     }
 
@@ -63,6 +62,7 @@ public class EventHandler {
     }
 
     private static boolean canWeaponDisableShield(ItemStack weapon) {
+        if(weapon == null || weapon.isEmpty()) return false;
         if(weapon.getItem() instanceof ItemAxe) return true;
         if(Math.random() <= ModConfig.Tweaks.chance) {
             return weapon.getItem() == TinkerMeleeWeapons.cleaver || weapon.getItem() == TinkerHarvestTools.hatchet;
