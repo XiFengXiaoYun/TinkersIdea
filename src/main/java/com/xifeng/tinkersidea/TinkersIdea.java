@@ -3,9 +3,13 @@ package com.xifeng.tinkersidea;
 import com.xifeng.tinkersidea.common.CommonProxy;
 import com.xifeng.tinkersidea.config.ModConfig;
 import com.xifeng.tinkersidea.event.EventHandler;
-import com.xifeng.tinkersidea.leveling.LevelUpEventHandler;
+import com.xifeng.tinkersidea.leveling.LevelingRule;
+import com.xifeng.tinkersidea.leveling.event.ArmorEventHandler;
+import com.xifeng.tinkersidea.leveling.event.LevelUpEventHandler;
 import com.xifeng.tinkersidea.modifiers.registry.ModifierRegister;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -13,6 +17,11 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.nio.file.Path;
+
+import static com.xifeng.tinkersidea.leveling.event.LevelUpEventHandler.ruleList;
 
 @Mod(
         modid = Tags.MOD_ID,
@@ -40,6 +49,7 @@ public class TinkersIdea {
         if(ModConfig.General.enableLeveling) {
             logger.info("Init leveling event handler");
             MinecraftForge.EVENT_BUS.register(LevelUpEventHandler.class);
+            MinecraftForge.EVENT_BUS.register(ArmorEventHandler.class);
         }
     }
 
@@ -58,6 +68,11 @@ public class TinkersIdea {
         if(ModConfig.General.enableLeveling) {
             logger.info("Init leveling config");
             LevelUpEventHandler.initConfig();
+            if(ModConfig.Leveling.loadFromJson) {
+                File configDirFile = Loader.instance().getConfigDir();
+                Path configDir = configDirFile.toPath().resolve("tinkersidea");
+                LevelingRule.loadFromJson(configDir, ruleList);
+            }
         }
     }
 }

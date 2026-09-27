@@ -57,7 +57,7 @@ public class ModConfig {
     }
 
     public static class Leveling {
-        @Config.Comment("Max level of all the tools")
+        @Config.Comment("Max level of all the tools and armors")
         @Config.RangeInt(min = 1)
         public static int maxLevel = 20;
 
@@ -65,9 +65,17 @@ public class ModConfig {
         @Config.RangeInt(min = 1)
         public static int baseMaxExp = 100;
 
+        @Config.Comment("Base max armor exp")
+        @Config.RangeInt(min = 1)
+        public static int baseMaxExpArmor = 100;
+
         @Config.Comment("The ratio of mob max health convert to tool exp when it dies")
         @Config.RangeDouble(min = 0.0, max = 10.0)
         public static double ratio = 0.2;
+
+        @Config.Comment("Damage of player get convert to armor exp")
+        @Config.RangeDouble(min = 0.0, max = 10.0)
+        public static double damageToExp = 1.0;
 
         @Config.Comment("Max exp get by kill a mob")
         @Config.RangeInt(min = 1)
@@ -76,6 +84,10 @@ public class ModConfig {
         @Config.Comment("Max exp get by break a block")
         @Config.RangeInt(min = 1)
         public static int maxExpBlock = 50;
+
+        @Config.Comment("Max exp gained by get hurt")
+        @Config.RangeInt(min = 1)
+        public static int maxExpArmor = 50;
 
         @Config.Comment("The exp growth mode required for each level \n" +
                         "Three modes available, ADD, MULTI and CONST \n" +
@@ -91,14 +103,15 @@ public class ModConfig {
 
         @Config.Comment("The multiplier of MULTI mode")
         @Config.RangeDouble(min = 1.0, max = 10.0)
-        public static double multiplier = 2.0;
+        public static double multiplier = 1.25;
 
         @Config.Comment("Tool groups, format is tool1,tool2,tool3...")
         public static String[] toolGroups = new String[] {
                 "tconstruct:broadsword,tconstruct:rapier,tconstruct:cleaver,tconstruct:longsword,tconstruct:scythe,tinkersidea:greatsword,tinkersidea:thrusting_lance",
                 "tconstruct:shovel,tconstruct:hatchet,tconstruct:mattock,tconstruct:kama,tconstruct:hammer,tconstruct:lumberaxe",
                 "tconstruct:shortbow,tconstruct:longbow,tconstruct:crossbow",
-                "tconstruct:arrow,tconstruct:bolt"
+                "tconstruct:arrow,tconstruct:bolt",
+                "conarm:helmet,conarm:chestplate,conarm:leggings,conarm:boots"
         };
 
         @Config.Comment("Leveling rule, format is stats:type:threshold:amount,stats1:type:threshold:amount... type = 1, int stats, type = 2, float stats")
@@ -107,7 +120,11 @@ public class ModConfig {
                 "Durability:1:1:50,Attack:2:4:1.5,FreeModifiers:1:4:1",
                 "Durability:1:1:50,Attack:2:4:1.5,FreeModifiers:1:4:1",
                 "Durability:1:1:50,Attack:2:4:1.5,FreeModifiers:1:4:1",
+                "Durability:1:1:20,Defense:2:2:0.25,Toughness:2:4:0.25,FreeModifiers:1:4:1"
         };
+
+        @Config.Comment("Set true to use json to define leveling rule, and the config option will be ignored")
+        public static boolean loadFromJson = false;
 
     }
 }

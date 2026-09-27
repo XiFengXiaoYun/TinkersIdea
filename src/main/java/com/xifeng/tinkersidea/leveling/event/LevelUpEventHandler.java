@@ -1,10 +1,17 @@
-package com.xifeng.tinkersidea.leveling;
+package com.xifeng.tinkersidea.leveling.event;
 
+import c4.conarm.lib.armor.ArmorCore;
+import c4.conarm.lib.tinkering.ArmorBuilder;
+import c4.conarm.lib.tinkering.TinkersArmor;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.xifeng.tinkersidea.TinkersIdea;
 import com.xifeng.tinkersidea.config.ModConfig;
+import com.xifeng.tinkersidea.leveling.LevelMode;
+import com.xifeng.tinkersidea.leveling.LevelingRule;
+import com.xifeng.tinkersidea.leveling.StatsModifier;
 import com.xifeng.tinkersidea.leveling.modifier.LevelNBT;
+import com.xifeng.tinkersidea.leveling.modifier.ModifierArmorLeveling;
 import com.xifeng.tinkersidea.leveling.modifier.ModifierToolLeveling;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
@@ -19,8 +26,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -40,7 +49,7 @@ import slimeknights.tconstruct.library.utils.ToolHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LevelUpEventHandler {
+public final class LevelUpEventHandler {
     public static Multimap<Integer, StatsModifier> levelingRules = ArrayListMultimap.create();
     public static Multimap<Integer, String> toolGroups = ArrayListMultimap.create();
     public static String[] groups = ModConfig.Leveling.toolGroups;
@@ -51,12 +60,13 @@ public class LevelUpEventHandler {
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public static void tooltip(ItemTooltipEvent event) {
-        if(!(event.getItemStack().getItem() instanceof TinkerToolCore)) return;
+        if(!(event.getItemStack().getItem() instanceof TinkerToolCore) && !(event.getItemStack().getItem() instanceof ArmorCore)) return;
         ItemStack stack = event.getItemStack();
         if(ToolHelper.isBroken(stack)) return;
-        boolean hasLeveling = TinkerUtil.hasModifier(stack.getTagCompound(), ModifierToolLeveling.ID);
+        boolean isArmor = stack.getItem() instanceof ArmorCore;
+        boolean hasLeveling = hasLeveling(stack, isArmor);
         if(!hasLeveling) return;
-        LevelNBT nbt = LevelNBT.get(stack);
+        LevelNBT nbt = LevelNBT.get(stack, isArmor);
         String expText = I18n.format("tooltips.level.exp",
                 TextFormatting.RESET + String.valueOf(nbt.exp),
                 nbt.maxExp
@@ -65,6 +75,11 @@ public class LevelUpEventHandler {
         String levelText = I18n.format("tooltips.level.level", TextFormatting.RESET + levelName);
         event.getToolTip().add(1, expText);
         event.getToolTip().add(2, levelText);
+    }
+
+    private static boolean hasLeveling(ItemStack stack, boolean isArmor) {
+        NBTTagCompound nbt = stack.getTagCompound();
+        return isArmor ? TinkerUtil.hasModifier(nbt, ModifierArmorLeveling.ID) : TinkerUtil.hasModifier(nbt, ModifierToolLeveling.ID);
     }
 
     @SubscribeEvent
@@ -94,16 +109,16 @@ public class LevelUpEventHandler {
         if(!event.getSource().isProjectile()) {
             ItemStack stack = player.getHeldItemMainhand();
             if(ToolHelper.isBroken(stack)) return;
-            handleExp(stack, xp, player);
+            handleExp(stack, xp, player, false);
         } else {
             if(event.getSource().getImmediateSource() instanceof EntityProjectileBase) {
                 EntityProjectileBase projectileBase = (EntityProjectileBase) event.getSource().getImmediateSource();
                 TinkerProjectileHandler handler = projectileBase.tinkerProjectile;
                 ItemStack launcher = handler.getLaunchingStack();
                 ItemStack arrow = ((BowCore) launcher.getItem()).findAmmo(launcher, player);
-                handleExp(launcher, xp/2, player);
+                handleExp(launcher, xp/2, player, false);
                 if(launcher != arrow) {
-                    handleExp(arrow, xp, player);
+                    handleExp(arrow, xp, player, false);
                 }
             }
         }
@@ -113,20 +128,38 @@ public class LevelUpEventHandler {
     public static void blockDrop(BlockEvent.HarvestDropsEvent event) {
         if(!(event.getHarvester() instanceof EntityPlayer) || event.getHarvester() == null) return;
         EntityPlayer player = event.getHarvester();
+        if(player.world.isRemote) return;
         ItemStack tool = DualToolHarvestUtils.getItemstackToUse(player, event.getState());
         if(!(tool.getItem() instanceof TinkerToolCore)) return;
         Block block = event.getState().getBlock();
         int exp = Math.min((int) (block.blockHardness * block.getHarvestLevel(event.getState())), ModConfig.Leveling.maxExpBlock);
         if(exp <= 0) return;
-        handleExp(tool, exp, player);
+        handleExp(tool, exp, player, false);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public static void onHurt(LivingHurtEvent event) {
+        if(event.getEntityLiving().world.isRemote) return;
+        if(!(event.getEntityLiving() instanceof EntityPlayer) || event.getSource().isUnblockable) return;
+        EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+        int exp = Math.min((int) (event.getAmount() * ModConfig.Leveling.damageToExp), ModConfig.Leveling.maxExpArmor);
+        if(exp <= 0) return;
+        for(ItemStack stack : player.getArmorInventoryList()) {
+            if(!stack.isEmpty() || stack.getItem() instanceof ArmorCore) {
+                handleExp(stack, exp, player, true);
+            }
+        }
     }
 
 
-    private static void handleExp(ItemStack stack, int exp, EntityPlayer player) {
+    private static void handleExp(ItemStack stack, int exp, EntityPlayer player, boolean isArmor) {
+
         NBTTagList tagList = TagUtil.getModifiersTagList(stack);
-        int index = TinkerUtil.getIndexInCompoundList(tagList, ModifierToolLeveling.ID);
+        String id = isArmor ? ModifierArmorLeveling.ID : ModifierToolLeveling.ID;
+        int index = TinkerUtil.getIndexInCompoundList(tagList, id);
         NBTTagCompound modifierTag = tagList.getCompoundTagAt(index);
-        LevelNBT nbt = LevelNBT.get(stack);
+
+        LevelNBT nbt = LevelNBT.get(stack, isArmor);
         int oldLevel = nbt.getLevel();
         boolean levelUp = nbt.add(exp, LevelMode.valueOf(ModConfig.Leveling.mode));
         nbt.write(modifierTag);
@@ -142,7 +175,11 @@ public class LevelUpEventHandler {
             player.sendStatusMessage(new TextComponentString(levelUpText), false);
             try {
                 NBTTagCompound rootTag = TagUtil.getTagSafe(stack);
-                ToolBuilder.rebuildTool(rootTag, (TinkersItem) stack.getItem());
+                if(!isArmor) {
+                    ToolBuilder.rebuildTool(rootTag, (TinkersItem) stack.getItem());
+                } else {
+                    ArmorBuilder.rebuildArmor(rootTag, (TinkersArmor) stack.getItem());
+                }
                 stack.setTagCompound(rootTag);
             } catch (TinkerGuiException e) {
                 throw new RuntimeException(e);
@@ -151,10 +188,7 @@ public class LevelUpEventHandler {
     }
 
     private static void applyStatsBonus(ItemStack stack, LevelNBT nbt) {
-        if(ruleList.isEmpty()) {
-            TinkersIdea.logger.info("Strange thing happen! No tool leveling rule!");
-            return;
-        }
+        if(ruleList.isEmpty()) return;
         if(stack.isEmpty()) return;
         ResourceLocation rl = stack.getItem().getRegistryName();
         if(rl == null) return;
@@ -166,10 +200,7 @@ public class LevelUpEventHandler {
                 break;
             }
         }
-        if(rule == null) {
-            TinkersIdea.logger.info("Sorry, no rule matched");
-            return;
-        }
+        if(rule == null) return;
         calcStatsBonus(nbt, rule);
         TinkersIdea.logger.info("Apply Stats Bonus finished!");
     }
@@ -178,16 +209,13 @@ public class LevelUpEventHandler {
         int level = nbt.level - 1;
         if(level <= 0) return;
         List<StatsModifier> applyStats = rule.matchModifier(level);
-        if(applyStats.isEmpty()) {
-            TinkersIdea.logger.error("No stats will be applied");
-            return;
-        }
+        if(applyStats.isEmpty()) return;
         for(StatsModifier mod : applyStats) {
             int type = mod.type;
-            TinkersIdea.logger.info("Modifier amount is {}", mod.base);
             //int
             if(type == 1) {
                 nbt.addIntStats(mod.stats, (int) mod.base);
+            //float
             } else if (type == 2) {
                 nbt.addFloatStats(mod.stats, (float) mod.base);
             } else {
@@ -197,6 +225,9 @@ public class LevelUpEventHandler {
     }
 
     public static void initConfig() {
+        if(ModConfig.Leveling.loadFromJson) {
+            return;
+        }
         TinkersIdea.logger.info("Start init config!");
         initToolGroups();
         initRules();
@@ -205,7 +236,6 @@ public class LevelUpEventHandler {
             List<StatsModifier> l2 = new ArrayList<>(levelingRules.get(i));
             LevelingRule rule = new LevelingRule(l1, l2);
             ruleList.add(rule);
-            TinkersIdea.logger.info("Add a leveling rule!");
         }
     }
 
@@ -246,7 +276,6 @@ public class LevelUpEventHandler {
                 StatsModifier modifier = new StatsModifier(s[0], amount, threshold);
                 modifier.type = type;
                 levelingRules.put(i, modifier);
-                TinkersIdea.logger.info("Add a rule!");
             }
         }
     }

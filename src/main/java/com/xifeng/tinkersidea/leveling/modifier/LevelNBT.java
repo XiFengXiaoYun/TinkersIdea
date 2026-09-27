@@ -21,7 +21,7 @@ public class LevelNBT extends ModifierNBT {
     public void read(NBTTagCompound tag) {
         super.read(tag);
         exp = tag.getInteger("exp");
-        maxExp = tag.getInteger("maxExp") == 0 ? ModConfig.Leveling.baseMaxExp : tag.getInteger("maxExp");
+        maxExp = tag.getInteger("maxExp");
         statsBonus = tag.getCompoundTag("statsBonus");
     }
 
@@ -92,8 +92,9 @@ public class LevelNBT extends ModifierNBT {
         }
     }
 
-    public static LevelNBT get(ItemStack stack) {
-        return get(TinkerUtil.getModifierTag(stack, ModifierToolLeveling.ID));
+    public static LevelNBT get(ItemStack stack, boolean isArmor) {
+        String id = isArmor ? ModifierArmorLeveling.ID : ModifierToolLeveling.ID;
+        return get(TinkerUtil.getModifierTag(stack, id));
     }
 
     public static LevelNBT get(NBTTagCompound modTag) {
