@@ -1,0 +1,13 @@
+{
+	"package": "com.xifeng.tinkersidea.mixin",
+	"required": true,
+	"refmap": "mixins.tinkersidea.refmap.json",
+	"target": "@env(DEFAULT)",
+	"minVersion": "0.8.5",
+	"compatibilityLevel": "JAVA_8",
+	"mixins": [
+		"MixinTileFrostBrick"
+	],
+	"server": [],
+	"client": []
+}
