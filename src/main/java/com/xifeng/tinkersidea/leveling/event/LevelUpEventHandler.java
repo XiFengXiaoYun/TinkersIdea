@@ -39,6 +39,7 @@ import slimeknights.tconstruct.library.events.TinkerToolEvent;
 import slimeknights.tconstruct.library.modifiers.TinkerGuiException;
 import slimeknights.tconstruct.library.tinkering.TinkersItem;
 import slimeknights.tconstruct.library.tools.DualToolHarvestUtils;
+import slimeknights.tconstruct.library.tools.IAmmoUser;
 import slimeknights.tconstruct.library.tools.TinkerToolCore;
 import slimeknights.tconstruct.library.tools.ranged.BowCore;
 import slimeknights.tconstruct.library.utils.TagUtil;
@@ -115,9 +116,10 @@ public final class LevelUpEventHandler {
                 EntityProjectileBase projectileBase = (EntityProjectileBase) event.getSource().getImmediateSource();
                 TinkerProjectileHandler handler = projectileBase.tinkerProjectile;
                 ItemStack launcher = handler.getLaunchingStack();
-                ItemStack arrow = ((BowCore) launcher.getItem()).findAmmo(launcher, player);
                 handleExp(launcher, xp/2, player, false);
-                if(launcher != arrow) {
+                if(launcher.getItem() instanceof IAmmoUser) {
+                    ItemStack arrow = ((IAmmoUser) launcher.getItem()).findAmmo(launcher, player);
+                    if(arrow.isEmpty()) return;
                     handleExp(arrow, xp, player, false);
                 }
             }

@@ -44,7 +44,6 @@ public class TinkersIdea {
         ModifierRegister.initModifiers();
         if(ModConfig.General.enableTweaks) {
             MinecraftForge.EVENT_BUS.register(EventHandler.class);
-            proxy.registerAnimation();
         }
         if(ModConfig.General.enableLeveling) {
             logger.info("Init leveling event handler");

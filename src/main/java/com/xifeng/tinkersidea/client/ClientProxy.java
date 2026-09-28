@@ -3,9 +3,7 @@ package com.xifeng.tinkersidea.client;
 import c4.conarm.lib.book.ArmoryBook;
 import com.xifeng.tinkersidea.common.CommonProxy;
 import com.xifeng.tinkersidea.Weapons.WeaponAll;
-import com.xifeng.tinkersidea.event.ThrustingAnimationHandler;
 import net.minecraft.item.Item;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import slimeknights.mantle.client.book.repository.FileRepository;
@@ -59,8 +57,4 @@ public class ClientProxy extends CommonProxy {
         ModelRegisterUtil.registerItemModel(item);
     }
 
-    @Override
-    public void registerAnimation() {
-        MinecraftForge.EVENT_BUS.register(ThrustingAnimationHandler.class);
-    }
 }
