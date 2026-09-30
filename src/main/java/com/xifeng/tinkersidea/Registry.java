@@ -16,7 +16,9 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import slimeknights.tconstruct.library.TinkerRegistry;
+import slimeknights.tconstruct.library.modifiers.IModifier;
 import slimeknights.tconstruct.library.tools.ToolCore;
+import slimeknights.tconstruct.tools.TinkerModifiers;
 
 @Mod.EventBusSubscriber(modid = Tags.MOD_ID)
 public final class Registry {
@@ -42,6 +44,9 @@ public final class Registry {
     @SubscribeEvent
     public static void registerItem(RegistryEvent.Register<Item> event) {
         ItemRegistry.initItems(event);
+        for(IModifier mod : new IModifier[]{TinkerModifiers.modBaneOfArthopods, TinkerModifiers.modBeheading, TinkerModifiers.modDiamond, TinkerModifiers.modEmerald, TinkerModifiers.modGlowing, TinkerModifiers.modHaste, TinkerModifiers.modFiery, TinkerModifiers.modKnockback, TinkerModifiers.modLuck, TinkerModifiers.modMendingMoss, TinkerModifiers.modNecrotic, TinkerModifiers.modReinforced, TinkerModifiers.modSharpness, TinkerModifiers.modShulking, TinkerModifiers.modSilktouch, TinkerModifiers.modSmite, TinkerModifiers.modSoulbound, TinkerModifiers.modWebbed}) {
+            TinkersIdea.proxy.registerModifierModel(mod, new ResourceLocation(Tags.MOD_ID, "models/item/modifiers/" + mod.getIdentifier()));
+        }
     }
 
     @SideOnly(Side.CLIENT)

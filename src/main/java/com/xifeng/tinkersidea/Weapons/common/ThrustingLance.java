@@ -193,7 +193,7 @@ public class ThrustingLance extends ProjectileCore {
         ForgeEventFactory.onArrowNock(stack, world, player, player.getActiveHand(), this.getCurrentAmmo(stack) > 0);
         int useTime = this.getMaxItemUseDuration(stack) - timeLeft;
         useTime = ForgeEventFactory.onArrowLoose(stack, world, player, useTime, this.getCurrentAmmo(stack) > 0);
-        if(useTime <= 10) return;
+        if(useTime <= 5) return;
         float progress = getProgress(useTime);
         float power = getPower(progress);
         float speed = getSpeed(progress, stack);

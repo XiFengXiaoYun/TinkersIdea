@@ -14,7 +14,7 @@ import slimeknights.tconstruct.library.utils.ToolHelper;
 import slimeknights.tconstruct.tools.harvest.TinkerHarvestTools;
 import slimeknights.tconstruct.tools.melee.TinkerMeleeWeapons;
 
-public class EventHandler {
+public final class EventHandler {
     public static final int maxCooldown = ModConfig.Tweaks.maxCooldown;
     //make battle sign not so OP
     @SubscribeEvent

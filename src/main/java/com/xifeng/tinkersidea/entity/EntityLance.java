@@ -45,7 +45,7 @@ public class EntityLance extends EntityProjectileBase {
 
     @Override
     protected void onEntityHit(Entity entityHit) {
-        if(this.piercingEntity < this.maxPiercingEntity) {
+        if(this.piercingEntity < this.maxPiercingEntity + 1) {
             this.piercingEntity++;
         } else {
             this.setDead();
