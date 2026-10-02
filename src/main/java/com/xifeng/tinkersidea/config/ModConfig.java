@@ -25,6 +25,9 @@ public class ModConfig {
         @Config.Comment("Set false to disable great sword")
         public static boolean enableGreatSword = true;
 
+        @Config.Comment("Set false to disable thrusting lance")
+        public static boolean enableThrustingLance = true;
+
         @Config.Comment("Set false to disable tweaks about battlesign")
         public static boolean enableTweaks = true;
 
@@ -123,7 +126,7 @@ public class ModConfig {
                 "Durability:1:1:20,Defense:2:2:0.25,Toughness:2:4:0.25,FreeModifiers:1:4:1"
         };
 
-        @Config.Comment("Set true to use json to define leveling rule, and the config option will be ignored")
+        @Config.Comment("Set true to use json to define leveling rule, and the config toolGroups and rules will be ignored")
         public static boolean loadFromJson = false;
 
     }

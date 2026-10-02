@@ -1,7 +1,8 @@
 package com.xifeng.tinkersidea;
 
-import com.xifeng.tinkersidea.Weapons.WeaponRegister;
+import com.xifeng.tinkersidea.Weapons.WeaponAll;
 import com.xifeng.tinkersidea.client.render.RenderLance;
+import com.xifeng.tinkersidea.config.ModConfig;
 import com.xifeng.tinkersidea.entity.EntityLance;
 import com.xifeng.tinkersidea.items.ItemRegistry;
 import net.minecraft.item.Item;
@@ -25,7 +26,7 @@ public final class Registry {
     //register tools here
     @SubscribeEvent
     public static void registerTools(RegistryEvent.Register<Item> event) {
-        WeaponRegister.registerWeapon(event);
+        WeaponAll.initWeapon(event);
     }
 
     public static void initForgeTool(ToolCore core, RegistryEvent.Register<Item> event) {
@@ -53,11 +54,14 @@ public final class Registry {
     @SubscribeEvent
     public static void registerModels(ModelRegistryEvent event) {
         TinkersIdea.proxy.registerItemModel(ItemRegistry.magicPlate);
-        RenderingRegistry.registerEntityRenderingHandler(EntityLance.class, RenderLance::new);
+        if(ModConfig.General.enableThrustingLance) {
+            RenderingRegistry.registerEntityRenderingHandler(EntityLance.class, RenderLance::new);
+        }
     }
 
     @SubscribeEvent
     public static void registerEntity(RegistryEvent.Register<EntityEntry> event) {
+        if(!ModConfig.General.enableThrustingLance) return;
         EntityRegistry.registerModEntity(new ResourceLocation(Tags.MOD_ID, "thrusting_lance"), EntityLance.class, "lance", 1145, TinkersIdea.INSTANCE, 64, 1, false);
     }
 

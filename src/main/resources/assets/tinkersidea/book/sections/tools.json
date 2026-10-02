@@ -3,5 +3,10 @@
     "name": "greatsword",
     "type": "tool",
     "data": "tools/greatsword.json"
+  },
+  {
+    "name": "thrusting_lance",
+    "type": "tool",
+    "data": "tools/thrusting_lance.json"
   }
 ]

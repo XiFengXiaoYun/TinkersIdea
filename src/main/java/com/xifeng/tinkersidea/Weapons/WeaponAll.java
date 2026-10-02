@@ -19,19 +19,22 @@ public class WeaponAll {
     public static ToolPart longBlade;
 
     public static void initWeapon(RegistryEvent.Register<Item> event) {
-        if(!ModConfig.General.enableGreatSword) return;
+        if(ModConfig.General.enableGreatSword) {
+            longBlade = new ToolPart(576);
+            longBlade.setRegistryName("long_blade").setTranslationKey("long_blade");
+            event.getRegistry().register(longBlade);
+            TinkerRegistry.registerToolPart(longBlade);
+            TinkersIdea.proxy.registerToolPartModel(longBlade);
+            TinkerRegistry.registerStencilTableCrafting(Pattern.setTagForPart(new ItemStack(TinkerTools.pattern), longBlade));
 
-        longBlade = new ToolPart(576);
-        longBlade.setRegistryName("long_blade").setTranslationKey("long_blade");
-        event.getRegistry().register(longBlade);
-        TinkerRegistry.registerToolPart(longBlade);
-        TinkersIdea.proxy.registerToolPartModel(longBlade);
-        TinkerRegistry.registerStencilTableCrafting(Pattern.setTagForPart(new ItemStack(TinkerTools.pattern), longBlade));
+            greatSword = new GreatSword();
+            Registry.initForgeTool(greatSword, event);
+        }
 
-        greatSword = new GreatSword();
-        Registry.initForgeTool(greatSword, event);
-        lance = new ThrustingLance();
-        Registry.initForgeTool(lance, event);
+        if(ModConfig.General.enableThrustingLance) {
+            lance = new ThrustingLance();
+            Registry.initForgeTool(lance, event);
+        }
 
     }
 }

@@ -20,6 +20,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
+import slimeknights.tconstruct.library.client.particle.Particles;
 import slimeknights.tconstruct.library.entity.EntityProjectileBase;
 import slimeknights.tconstruct.library.materials.*;
 import slimeknights.tconstruct.library.tinkering.Category;
@@ -30,6 +31,7 @@ import slimeknights.tconstruct.library.utils.TagUtil;
 import slimeknights.tconstruct.library.utils.TinkerUtil;
 import slimeknights.tconstruct.library.utils.ToolHelper;
 import slimeknights.tconstruct.tools.TinkerTools;
+import slimeknights.tconstruct.tools.melee.item.Rapier;
 import slimeknights.tconstruct.tools.ranged.TinkerRangedWeapons;
 import slimeknights.tconstruct.tools.traits.TraitEnderference;
 
@@ -37,7 +39,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
 
-//TODO：突刺长枪：长距离攻击，小范围横扫，右键蓄力，松开后可以发射并穿透目标进行攻击
+//TODO：突刺长枪：长距离攻击，穿刺，右键蓄力，松开后可以发射并穿透目标进行攻击
 //TODO: 新的强化：穿透：增加穿透目标的数量；反弹：碰到方块后可以反射一次；忠诚：射到方块上可以自动回来；超蓄能：大幅降低蓄力时间
 public class ThrustingLance extends ProjectileCore {
     private static final UUID uuid = UUID.fromString("8d60ef90-ad99-4e77-8276-d8b0f76691bf");
@@ -109,31 +111,17 @@ public class ThrustingLance extends ProjectileCore {
 
     @Override
     public boolean dealDamage(ItemStack stack, EntityLivingBase player, Entity entity, float damage) {
-        boolean hit =  super.dealDamage(stack, player, entity, damage);
-        if(hit && !ToolHelper.isBroken(stack)) {
-            double d0 = player.distanceWalkedModified - player.prevDistanceWalkedModified;
-            boolean flag = true;
-            double reach = player.getDistanceSq(entity) + 1.0;
-            if(player instanceof EntityPlayer) {
-                flag = ((EntityPlayer) player).getCooledAttackStrength(0.5F) > 0.75f;
-            }
-            boolean flag2 = player.fallDistance > 0.0F && !player.onGround && !player.isOnLadder() && !player.isInWater() && !player.isPotionActive(MobEffects.BLINDNESS) && !player.isRiding();
-            if(flag && !player.isSprinting() && !flag2 && player.onGround && d0 < (double) player.getAIMoveSpeed()) {
-                for(EntityLivingBase entitylivingbase : DamageUtil.getEntitiesInRange(entity, player.getEntityWorld(), 1.5)) {
-
-                    if(entitylivingbase != player && entitylivingbase != entity && !player.isOnSameTeam(entitylivingbase) && player.getDistanceSq(entitylivingbase) <= reach) {
-                        entitylivingbase.knockBack(player, 0.5F, MathHelper.sin(player.rotationYaw * 0.017453292F), -MathHelper.cos(player.rotationYaw * 0.017453292F));
-                        super.dealDamage(stack, player, entitylivingbase, damage * 0.125f);
-                    }
-
-                }
-
-                player.getEntityWorld().playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, player.getSoundCategory(), 2.0F, 0.875F);
-                if(player instanceof EntityPlayer) {
-                    ((EntityPlayer) player).spawnSweepParticles();
-                }
-            }
+        boolean hit;
+        if(player instanceof EntityPlayer) {
+            hit = Rapier.dealHybridDamage(DamageSource.causePlayerDamage((EntityPlayer) player), entity, damage);
         }
+        else {
+            hit = Rapier.dealHybridDamage(DamageSource.causeMobDamage(player), entity, damage);
+        }
+        if(hit && readyForSpecialAttack(player)) {
+            TinkerTools.proxy.spawnAttackParticle(Particles.RAPIER_ATTACK, player, 0.8d);
+        }
+
         return hit;
 
     }

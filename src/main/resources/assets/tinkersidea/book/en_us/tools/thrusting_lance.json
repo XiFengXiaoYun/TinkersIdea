@@ -1,0 +1,19 @@
+{
+  "tool": "thrusting_lance",
+  "text": [
+    {
+      "text": "Melee attacks can penetrate some armor and deal damage, while ranged projectiles can penetrate targets but suffer damage attenuation."
+    },
+    {
+      "text": "\n"
+    },
+    {
+      "text": "Moderate damage."
+    }
+  ],
+  "properties": [
+    "Longer attack range",
+    "Throw it by right click",
+    "Penetrate target"
+  ]
+}

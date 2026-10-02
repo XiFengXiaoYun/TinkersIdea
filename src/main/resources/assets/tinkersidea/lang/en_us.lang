@@ -2,7 +2,7 @@ item.long_blade.name=Long Blade
 item.greatsword.name=Great Sword
 item.greatsword.desc=Wide-area sweeping attack with high damage, slow attack speed, requires two-handed swinging, and performs excellently against large groups of enemies. Let's defend against the zombie invasion!
 item.thrusting_lance.name=Thrusting Lance
-item.thrusting_lance.desc=Long-range attack, small-scale sweeping, and can be thrown with the right click.
+item.thrusting_lance.desc=Long-range attack, piercing, and can be used to throw and penetrate the target with right click.
 item.magic_plate.name=Magic Resistant Plate
 
 modifier.sweep_edge.name=Sweep Edge

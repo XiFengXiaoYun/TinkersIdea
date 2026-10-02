@@ -1,6 +1,5 @@
 package com.xifeng.tinkersidea;
-
-import net.minecraftforge.fml.common.Loader;
+/*
 import zone.rong.mixinbooter.ILateMixinLoader;
 
 import java.util.ArrayList;
@@ -25,3 +24,5 @@ public class MixinLoader implements ILateMixinLoader {
         MIXIN_CONFIGS.put(mixinConfig, () -> true);
     }
 }
+
+ */

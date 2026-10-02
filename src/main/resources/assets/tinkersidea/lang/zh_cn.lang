@@ -2,7 +2,7 @@ item.long_blade.name=长剑刃
 item.greatsword.name=大剑
 item.greatsword.desc=大范围横扫攻击，伤害较高，攻速较慢，需要两只手挥动，在面对一大群敌人时表现出色。快去抵御僵尸入侵吧！
 item.thrusting_lance.name=突刺长枪
-item.thrusting_lance.desc=长距离攻击，小范围横扫，右键可投掷。
+item.thrusting_lance.desc=长距离攻击，穿刺，右键可投掷并穿透目标。
 item.magic_plate.name=魔抗强化大板
 
 modifier.sweep_edge.name=横扫之刃

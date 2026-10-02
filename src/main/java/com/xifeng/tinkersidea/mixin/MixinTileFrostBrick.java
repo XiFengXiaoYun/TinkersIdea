@@ -1,5 +1,5 @@
 package com.xifeng.tinkersidea.mixin;
-
+/*
 import com.dungeon_additions.da.entity.tileEntity.TileEntityFrostBrick;
 import com.dungeon_additions.da.init.ModBlocks;
 import net.minecraft.block.state.IBlockState;
@@ -14,10 +14,7 @@ public class MixinTileFrostBrick extends TileEntity {
     @Shadow(remap = false)
     private int age;
 
-    /**
-     * @author 1
-     * @reason 2
-     */
+
     @Overwrite(remap = false)
     public void func_73660_a() {
         World world = this.getWorld();
@@ -37,3 +34,4 @@ public class MixinTileFrostBrick extends TileEntity {
         }
     }
 }
+*/
