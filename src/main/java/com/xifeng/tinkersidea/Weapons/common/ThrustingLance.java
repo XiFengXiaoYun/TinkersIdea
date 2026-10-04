@@ -50,7 +50,7 @@ public class ThrustingLance extends ProjectileCore {
                 PartMaterialType.handle(TinkerTools.toughToolRod)
         );
         this.durabilityPerAmmo = 3;
-        this.addCategory(Category.WEAPON);
+        this.addCategory(Category.WEAPON, Category.PROJECTILE);
         setTranslationKey("thrusting_lance").setRegistryName("thrusting_lance");
     }
 
