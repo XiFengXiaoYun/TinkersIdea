@@ -147,7 +147,7 @@ public final class LevelUpEventHandler {
         int exp = Math.min((int) (event.getAmount() * ModConfig.Leveling.damageToExp), ModConfig.Leveling.maxExpArmor);
         if(exp <= 0) return;
         for(ItemStack stack : player.getArmorInventoryList()) {
-            if(!stack.isEmpty() || stack.getItem() instanceof ArmorCore) {
+            if(!stack.isEmpty() && stack.getItem() instanceof ArmorCore) {
                 handleExp(stack, exp, player, true);
             }
         }
